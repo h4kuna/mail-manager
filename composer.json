@@ -1,0 +1,27 @@
+{
+    "name": "h4kuna/mail-manager",
+    "type": "library",
+    "description": "Provide send and development email",
+    "homepage": "https://github.com/h4kuna/mail-manager",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Milan Matějček",
+            "email": "milan.matejcek@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "nette/nette": ">=2.2.0",
+        "nette/di": ">=2.2.0",
+        "nette/bootstrap": ">=2.2.0"
+    },
+    "require-dev": {
+        "nette/tester": "~1.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "h4kuna\\": ""
+        }
+    }
+}

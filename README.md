@@ -1,0 +1,5 @@
+- display email as html page
+- on development automatic save to file
+- autoremove saved email (optional)
+- detect html/non-html template
+- parse system mail and send
