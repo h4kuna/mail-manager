@@ -1,0 +1,11 @@
+nette:
+    container:
+        debugger: TRUE
+
+extensions:
+    mailManagerExtension: h4kuna\MailManager\DI\MailManagerExtension
+
+mailManagerExtension:
+    development: true
+    from: milan.matejcek@gmail.com
+    templateDir: %appDir%/template
