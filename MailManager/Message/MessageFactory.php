@@ -25,6 +25,10 @@ class MessageFactory extends Object implements IMessageFactory {
         $this->returnPath = $returnPath;
     }
 
+    /**
+     * 
+     * @return Message
+     */
     public function create() {
         $message = new Message;
         if ($this->from) {

@@ -25,6 +25,9 @@ class FileMailer implements IMailer {
     /** @var string */
     private $live = '1 minute';
 
+    /** @var string */
+    private $lastFile;
+
     /**
      * @param $path
      */
@@ -43,13 +46,18 @@ class FileMailer implements IMailer {
         return $this;
     }
 
+    public function getLastFile() {
+        return $this->lastFile;
+    }
+
     /**
      * @param Message $mail
      */
     public function send(Message $mail) {
         $this->autoremove();
         list($sec) = explode(' ', substr(microtime(), 2));
-        file_put_contents($this->path . date('Y-m-d_H-i-s-') . $sec . '.' . $this->extension, $mail->generateMessage());
+        $this->lastFile = $this->path . date('Y-m-d_H-i-s-') . $sec . '.' . $this->extension;
+        file_put_contents($this->lastFile, $mail->generateMessage());
     }
 
     /** @return void */

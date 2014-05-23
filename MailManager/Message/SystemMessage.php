@@ -2,7 +2,7 @@
 
 namespace h4kuna\MailManager\Message;
 
-use Nette\MailManager\Message;
+use Nette\Mail\Message;
 
 /**
  * Send system mail
@@ -16,15 +16,10 @@ class SystemMessage extends Message {
         preg_match_all('/^([A-Z].*?): (.*)$/m', $body, $find);
         if ($find[0]) {
             foreach ($find[1] as $k => $header) {
-                $method = 'add' . $header;
-                if (method_exists($this, $method)) {
-                    $this->{$method}($find[2][$k]);
-                } else {
-                    $this->setHeader($header, $find[2][$k]);
-                }
+                $this->setHeader($header, $find[2][$k]);
             }
 
-            preg_match("/\n{3}(.*)/s", $body, $find);
+            preg_match("/\n{2,}(.*)$/s", $body, $find);
 
             $body = $find[1];
         }
