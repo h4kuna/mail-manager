@@ -11,8 +11,9 @@ use Nette\Mail\Message;
 use Nette\Object;
 use Nette\Templating\FileTemplate;
 use Nette\Templating\Template;
+use ArrayAccess;
 
-class MailManager extends Object {
+class MailManager extends Object implements ArrayAccess {
 
     /** @var IMailer */
     private $mailer;
@@ -107,22 +108,21 @@ class MailManager extends Object {
             return $body;
         }
 
-        if (isset($this->templates[$filePath])) {
-            return $this->templates[$filePath];
+        if ($this->issetTemplate($filePath)) {
+            $template = $this->templates[$filePath];
+            return $this->bindTemplate($template, $data);
         }
 
         $template = $this->loadTemplate($filePath);
+        $this->bindTemplate($template, $data);
         $template->action = $body;
-        foreach ($data as $key => $value) {
-            $template->{$key} = $value;
-        }
         $template->imageDir = '';
 
         return $this->templates[$filePath] = $template;
     }
 
     /**
-     * 
+     *
      * @param string $filePath
      * @return string|boolean
      */
@@ -136,6 +136,29 @@ class MailManager extends Object {
             return $filePath;
         }
         return FALSE;
+    }
+
+    /**
+     * 
+     * @param string $filePath
+     * @return bool
+     */
+    private function issetTemplate($filePath) {
+        return isset($this->templates[$filePath]);
+    }
+
+    /**
+     * Add variable to template
+     * 
+     * @param Template $template
+     * @param array $data
+     * @return Template
+     */
+    private function bindTemplate(Template $template, array $data) {
+        foreach ($data as $key => $value) {
+            $template->{$key} = $value;
+        }
+        return $template;
     }
 
     /**
@@ -175,6 +198,22 @@ class MailManager extends Object {
         $message->setReturnPath($msg->getReturnPath());
         $message->setBody($content);
         return $this->message = $message;
+    }
+
+    public function offsetExists($offset) {
+        return $this->issetTemplate($this->checkFile($offset));
+    }
+
+    public function offsetGet($offset) {
+        return $this->templates[$this->checkFile($offset)];
+    }
+
+    public function offsetSet($offset, $value) {
+        return $this->templates[$this->checkFile($offset)] = $value;
+    }
+
+    public function offsetUnset($offset) {
+        unset($this->templates[$this->checkFile($offset)]);
     }
 
 }
