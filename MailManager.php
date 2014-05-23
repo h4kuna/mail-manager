@@ -168,13 +168,13 @@ class MailManager extends Object {
      *
      * @param string $content
      */
-    public function sendSystemMail($content) {
+    public function createSystemMail($content) {
         $message = new SystemMessage();
         $msg = $this->_createMessage();
         $message->setFrom($msg->getFrom());
         $message->setReturnPath($msg->getReturnPath());
         $message->setBody($content);
-        $this->mailer->send($message);
+        return $this->message = $message;
     }
 
 }
