@@ -1,3 +1,3 @@
 <?php
 
-$container = include './tests/MailManagerTest.phpt';
+include './tests/MailManagerTest.phpt';

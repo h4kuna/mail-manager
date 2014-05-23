@@ -86,7 +86,12 @@ class MailManager extends Object {
         } else {
             $template = $this->createTemplate($body, $data);
         }
-        $this->setBody($template);
+
+        if ($this->html) {
+            $this->message->setHtmlBody($template, $this->imageDir);
+        } else {
+            $this->message->setBody($template);
+        }
         return $this->message;
     }
 
@@ -114,18 +119,6 @@ class MailManager extends Object {
         $template->imageDir = '';
 
         return $this->templates[$filePath] = $template;
-    }
-
-    /**
-     *
-     * @param string $body
-     */
-    private function setBody($body) {
-        if ($this->html) {
-            $this->message->setHtmlBody($body, $this->imageDir);
-        } else {
-            $this->message->setBody($body);
-        }
     }
 
     /**

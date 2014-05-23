@@ -33,5 +33,7 @@ foreach ($emails as $email => $body) {
  * Parse system message and you can send via smtp
  */
 $mailManager->sendSystemMail(file_get_contents(__DIR__ . '/template/system-mail.eml'));
+Assert::true(file_exists($mailer->getLastFile()));
+Assert::true(filesize($mailer->getLastFile()) > 0);
 
 
