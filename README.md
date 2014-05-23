@@ -2,7 +2,7 @@ MailManager
 -----------
 [![Build Status](https://travis-ci.org/h4kuna/exchange.png)](https://travis-ci.org/h4kuna/mail-manager)
 
-This extension for [Nette framework 2+](http://nette.org/). Support testing mails
+This extension for [Nette framework 2.1+](http://nette.org/). Support testing mails
 
 Installation to project
 -----------------------
