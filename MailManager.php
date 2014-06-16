@@ -38,6 +38,9 @@ class MailManager extends Object implements ArrayAccess {
 
     /** @var array */
     private $templates = array();
+    
+    /** @var array */
+    public $onCreateMessage;
 
     public function __construct(IMailer $mailer, ITemplateFactory $templateFactory, IMessageFactory $messageFactory) {
         $this->mailer = $mailer;
@@ -93,6 +96,8 @@ class MailManager extends Object implements ArrayAccess {
         } else {
             $this->message->setBody($template);
         }
+        
+        $this->onCreateMessage($this->message, $template, $this->messageFactory);        
         return $this->message;
     }
 
@@ -217,3 +222,4 @@ class MailManager extends Object implements ArrayAccess {
     }
 
 }
+
