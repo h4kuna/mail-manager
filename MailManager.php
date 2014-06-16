@@ -91,13 +91,14 @@ class MailManager extends Object implements ArrayAccess {
             $template = $this->createTemplate($body, $data);
         }
 
+        $this->onCreateMessage($this->message, $template, $this->messageFactory);
+
         if ($this->html) {
             $this->message->setHtmlBody($template, $this->imageDir);
         } else {
             $this->message->setBody($template);
         }
-        
-        $this->onCreateMessage($this->message, $template, $this->messageFactory);        
+             
         return $this->message;
     }
 
