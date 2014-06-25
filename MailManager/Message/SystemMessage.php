@@ -16,7 +16,12 @@ class SystemMessage extends Message {
         preg_match_all('/^([A-Z].*?): (.*)$/m', $body, $find);
         if ($find[0]) {
             foreach ($find[1] as $k => $header) {
-                $this->setHeader($header, $find[2][$k]);
+                $method = 'add' . ucfirst($header);
+                if (method_exists($this, $method)) {
+                    $this->{$method}($find[2][$k]);
+                } else {
+                    $this->setHeader($header, $find[2][$k]);
+                }
             }
 
             preg_match("/\n{2,}(.*)$/s", $body, $find);
