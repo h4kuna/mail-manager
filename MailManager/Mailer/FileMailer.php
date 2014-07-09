@@ -73,6 +73,7 @@ class FileMailer implements IMailer {
         foreach ($finder->in($this->path) as $file) {
             @unlink($file->getPathname());
         }
+        $this->live = NULL; // clear temporary onetime per execution.
     }
 
 }
