@@ -7,8 +7,12 @@ This extension for [Nette framework 2.1+](http://nette.org/). Support testing ma
 Installation to project
 -----------------------
 ```sh
-$ composer require h4kuna/mail-manager
+$ composer require h4kuna/mail-manager @dev
 ```
+
+Example NEON config
+-------------------
+look at to tests/config.neon
 
 How to use
 ----------
