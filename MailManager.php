@@ -10,7 +10,7 @@ use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Object;
 use Nette\Templating\FileTemplate;
-use Nette\Templating\Template;
+use Nette\Application\UI\ITemplate;
 use ArrayAccess;
 
 class MailManager extends Object implements ArrayAccess {
@@ -38,7 +38,7 @@ class MailManager extends Object implements ArrayAccess {
 
     /** @var array */
     private $templates = array();
-    
+
     /** @var array */
     public $onCreateMessage;
 
@@ -79,13 +79,13 @@ class MailManager extends Object implements ArrayAccess {
 
     /**
      * @param string $to email or email <name>
-     * @param string|Template $body content or filepath
+     * @param string|ITemplate $body content or filepath
      * @return Message
      */
     public function createMessage($to, $body, array $data = array()) {
         $this->_createMessage();
         $this->message->addTo($to);
-        if ($body instanceof Template) {
+        if ($body instanceof ITemplate) {
             $template = $body;
         } else {
             $template = $this->createTemplate($body, $data);
@@ -98,7 +98,7 @@ class MailManager extends Object implements ArrayAccess {
         } else {
             $this->message->setBody($template);
         }
-             
+
         return $this->message;
     }
 
@@ -156,11 +156,11 @@ class MailManager extends Object implements ArrayAccess {
     /**
      * Add variable to template
      * 
-     * @param Template $template
+     * @param ITemplate $template
      * @param array $data
-     * @return Template
+     * @return ITemplate
      */
-    private function bindTemplate(Template $template, array $data) {
+    private function bindTemplate(ITemplate $template, array $data) {
         foreach ($data as $key => $value) {
             $template->{$key} = $value;
         }
@@ -170,7 +170,7 @@ class MailManager extends Object implements ArrayAccess {
     /**
      *
      * @param string $file
-     * @return Template
+     * @return ITemplate
      */
     private function loadTemplate($file) {
         $this->html = strpos($file, 'plain') === FALSE;
@@ -223,4 +223,3 @@ class MailManager extends Object implements ArrayAccess {
     }
 
 }
-
