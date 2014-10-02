@@ -18,7 +18,20 @@ class TemplateFactory implements ITemplateFactory {
     }
 
     public function create() {
-        return $this->container->createService('nette.template');
+        return $this->getTemplateFactory()->createTemplate($this->getPresenter());
+    }
+
+    private function getPresenter() {
+        $presenter = $this->container->getService('application')->getPresenter();
+        if ($presenter) {
+            return $presenter;
+        }
+        return new FakeControl;
+    }
+
+    /** @return \Nette\Bridges\ApplicationLatte\TemplateFactory */
+    private function getTemplateFactory() {
+        return $this->container->createService('nette.templateFactory');
     }
 
 }
