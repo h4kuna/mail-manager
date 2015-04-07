@@ -13,7 +13,8 @@ use Nette\Templating\FileTemplate;
 use Nette\Application\UI\ITemplate;
 use ArrayAccess;
 
-class MailManager extends Object implements ArrayAccess {
+class MailManager extends Object implements ArrayAccess
+{
 
     /** @var IMailer */
     private $mailer;
@@ -36,24 +37,35 @@ class MailManager extends Object implements ArrayAccess {
     /** @var string */
     private $imageDir;
 
-    /** @var array */
+    /** @var \Latte\Template[] */
     private $templates = array();
+
+    /** @var \Latte\Template */
+    private $lastTemplate;
 
     /** @var array */
     public $onCreateMessage;
 
-    public function __construct(IMailer $mailer, ITemplateFactory $templateFactory, IMessageFactory $messageFactory) {
+    public function __construct(IMailer $mailer, ITemplateFactory $templateFactory, IMessageFactory $messageFactory)
+    {
         $this->mailer = $mailer;
         $this->messageFactory = $messageFactory;
         $this->templateFactory = $templateFactory;
     }
 
-    public function setTemplateDir($path) {
+    public function getLastTemplate()
+    {
+        return $this->lastTemplate;
+    }
+
+    public function setTemplateDir($path)
+    {
         $this->mailDir = realpath($path);
         return $this;
     }
 
-    public function setImageDir($path) {
+    public function setImageDir($path)
+    {
         $dir = realpath($path);
         if (!$dir) {
             throw new DirectoryNotFoundException($path);
@@ -62,18 +74,21 @@ class MailManager extends Object implements ArrayAccess {
         return $this;
     }
 
-    public function onHtml() {
+    public function onHtml()
+    {
         $this->html = TRUE;
         return $this;
     }
 
-    public function offHtml() {
+    public function offHtml()
+    {
         $this->html = FALSE;
         return $this;
     }
 
     /** @return Message */
-    private function _createMessage() {
+    private function _createMessage()
+    {
         return $this->message = $this->messageFactory->create();
     }
 
@@ -82,7 +97,8 @@ class MailManager extends Object implements ArrayAccess {
      * @param string|ITemplate $body content or filepath
      * @return Message
      */
-    public function createMessage($to, $body, array $data = array()) {
+    public function createMessage($to, $body, array $data = array())
+    {
         $this->_createMessage();
         $this->message->addTo($to);
         if ($body instanceof ITemplate) {
@@ -108,7 +124,8 @@ class MailManager extends Object implements ArrayAccess {
      * @param array $data
      * @return FileTemplate|string
      */
-    public function createTemplate($body, array $data = array()) {
+    public function createTemplate($body, array $data = array())
+    {
         $filePath = $this->checkFile($body);
         if (!$filePath) {
             return $body;
@@ -124,7 +141,7 @@ class MailManager extends Object implements ArrayAccess {
         $template->action = $body;
         $template->imageDir = '';
 
-        return $this->templates[$filePath] = $template;
+        return $this->lastTemplate = $this->templates[$filePath] = $template;
     }
 
     /**
@@ -132,7 +149,8 @@ class MailManager extends Object implements ArrayAccess {
      * @param string $filePath
      * @return string|boolean
      */
-    private function checkFile($filePath) {
+    private function checkFile($filePath)
+    {
         $file = $this->mailDir . DIRECTORY_SEPARATOR . $filePath . '.latte';
         if ($this->mailDir && is_file($file)) {
             return $file;
@@ -149,7 +167,8 @@ class MailManager extends Object implements ArrayAccess {
      * @param string $filePath
      * @return bool
      */
-    private function issetTemplate($filePath) {
+    private function issetTemplate($filePath)
+    {
         return isset($this->templates[$filePath]);
     }
 
@@ -160,7 +179,8 @@ class MailManager extends Object implements ArrayAccess {
      * @param array $data
      * @return ITemplate
      */
-    private function bindTemplate(ITemplate $template, array $data) {
+    private function bindTemplate(ITemplate $template, array $data)
+    {
         foreach ($data as $key => $value) {
             $template->{$key} = $value;
         }
@@ -172,7 +192,8 @@ class MailManager extends Object implements ArrayAccess {
      * @param string $file
      * @return ITemplate
      */
-    private function loadTemplate($file) {
+    private function loadTemplate($file)
+    {
         $this->html = strpos($file, 'plain') === FALSE;
         $template = $this->templateFactory->create();
         $template->setFile($file);
@@ -182,12 +203,14 @@ class MailManager extends Object implements ArrayAccess {
     /**
      * Send email
      */
-    public function send() {
+    public function send()
+    {
         $this->mailer->send($this->message);
     }
 
     /** @return Message */
-    public function getMessage() {
+    public function getMessage()
+    {
         $this->message || $this->_createMessage();
         return $this->message;
     }
@@ -197,7 +220,8 @@ class MailManager extends Object implements ArrayAccess {
      *
      * @param string $content
      */
-    public function createSystemMail($content) {
+    public function createSystemMail($content)
+    {
         $message = new SystemMessage();
         $msg = $this->_createMessage();
         $message->setFrom($msg->getFrom());
@@ -206,19 +230,23 @@ class MailManager extends Object implements ArrayAccess {
         return $this->message = $message;
     }
 
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         return $this->issetTemplate($this->checkFile($offset));
     }
 
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         return $this->templates[$this->checkFile($offset)];
     }
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         return $this->templates[$this->checkFile($offset)] = $value;
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         unset($this->templates[$this->checkFile($offset)]);
     }
 

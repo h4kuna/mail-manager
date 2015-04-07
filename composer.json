@@ -12,10 +12,12 @@
         }
     ],
     "require": {
+        "nette/application": "~2.1",
         "nette/bootstrap": "~2.1",
         "latte/latte": "~2.1",
-        "nette/application": "~2.1",
-        "nette/Mail": "~2.1"
+        "nette/mail": "~2.1",
+        "nette/robot-loader": "~2.1",
+        "nette/utils": "~2.1"
     },
     "require-dev": {
         "tracy/tracy": "~2.1",

@@ -9,9 +9,11 @@ use Nette\Mail\Message;
  *
  * @author Milan Matejcek
  */
-class SystemMessage extends Message {
+class SystemMessage extends Message
+{
 
-    public function setBody($body) {
+    public function setBody($body)
+    {
         $find = NULL;
         preg_match_all('/^([A-Z].*?): (.*)$/m', $body, $find);
         if ($find[0]) {
@@ -31,17 +33,20 @@ class SystemMessage extends Message {
         return parent::setBody($body);
     }
 
-    public function setFrom($email, $name = NULL) {
+    public function setFrom($email, $name = NULL)
+    {
         list($email, $name) = $this->toString($email, $name);
         return parent::setFrom($email, $name);
     }
 
-    public function setReturnPath($email) {
+    public function setReturnPath($email)
+    {
         list($email) = $this->toString($email);
         return parent::setReturnPath($email);
     }
 
-    private function toString($email, $name = NULL) {
+    private function toString($email, $name = NULL)
+    {
         if (is_array($email)) {
             return array(key($email), current($email));
         }

@@ -8,7 +8,8 @@ use Nette\Templating\ITemplate;
  *
  * @author Milan Matejcek
  */
-interface ITemplateFactory {
+interface ITemplateFactory
+{
 
     /** @var ITemplate */
     public function create();

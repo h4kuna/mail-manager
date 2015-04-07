@@ -8,7 +8,8 @@ use Nette\Mail\Message;
  *
  * @author Milan Matějček
  */
-interface IMessageFactory {
+interface IMessageFactory
+{
 
     /**
      * @return Message
@@ -16,13 +17,13 @@ interface IMessageFactory {
     public function create();
 
     /**
-     * 
+     *
      * @param string $email
      */
     public function setFrom($email);
 
     /**
-     * 
+     *
      * @param string $email
      */
     public function setReturnPath($email);
