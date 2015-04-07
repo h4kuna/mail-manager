@@ -9,7 +9,8 @@ use Nette\Object;
  *
  * @author Milan Matějček
  */
-class MessageFactory extends Object implements IMessageFactory {
+class MessageFactory extends Object implements IMessageFactory
+{
 
     /** @var string */
     private $from;
@@ -17,19 +18,22 @@ class MessageFactory extends Object implements IMessageFactory {
     /** @var string */
     private $returnPath;
 
-    public function setFrom($from) {
+    public function setFrom($from)
+    {
         $this->from = $from;
     }
 
-    public function setReturnPath($returnPath) {
+    public function setReturnPath($returnPath)
+    {
         $this->returnPath = $returnPath;
     }
 
     /**
-     * 
+     *
      * @return Message
      */
-    public function create() {
+    public function create()
+    {
         $message = new Message;
         if ($this->from) {
             $message->setFrom($this->from);

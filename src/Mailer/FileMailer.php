@@ -2,9 +2,10 @@
 
 namespace h4kuna\MailManager\Mailer;
 
-use Nette\Mail\IMailer;
-use Nette\Mail\Message;
-use Nette\Utils\Finder;
+use Nette\Mail\IMailer,
+    Nette\Mail\Message,
+    Nette\Utils\FileSystem,
+    Nette\Utils\Finder;
 
 /**
  * File Mailer - store mail to server uploads (file)
@@ -14,7 +15,8 @@ use Nette\Utils\Finder;
  * @author Milan Matejcek
  *
  */
-class FileMailer implements IMailer {
+class FileMailer implements IMailer
+{
 
     /** @var string */
     private $path;
@@ -31,29 +33,34 @@ class FileMailer implements IMailer {
     /**
      * @param $path
      */
-    public function __construct($path) {
-        @mkdir($path, 0777, TRUE);
+    public function __construct($path)
+    {
+        FileSystem::createDir($path);
         $this->path = realpath($path) . DIRECTORY_SEPARATOR;
     }
 
-    public function setExtension($extension) {
+    public function setExtension($extension)
+    {
         $this->extension = $extension;
         return $this;
     }
 
-    public function setLive($live) {
+    public function setLive($live)
+    {
         $this->live = $live;
         return $this;
     }
 
-    public function getLastFile() {
+    public function getLastFile()
+    {
         return $this->lastFile;
     }
 
     /**
      * @param Message $mail
      */
-    public function send(Message $mail) {
+    public function send(Message $mail)
+    {
         $this->autoremove();
         list($sec) = explode(' ', substr(microtime(), 2));
         $this->lastFile = $this->path . date('Y-m-d_H-i-s-') . $sec . '.' . $this->extension;
@@ -61,7 +68,8 @@ class FileMailer implements IMailer {
     }
 
     /** @return void */
-    private function autoremove() {
+    private function autoremove()
+    {
         if (!$this->live) {
             return;
         }

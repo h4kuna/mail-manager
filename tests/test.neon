@@ -11,4 +11,4 @@ extensions:
 mailManagerExtension:
     development: true
     from: milan.matejcek@gmail.com
-    templateDir: %appDir%/template
+    templateDir: %appDir%/template # home for mail template

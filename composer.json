@@ -1,7 +1,7 @@
 {
     "name": "h4kuna/mail-manager",
     "type": "library",
-    "description": "Provide send and development email",
+    "description": "Provide send and development email.",
     "homepage": "https://github.com/h4kuna/mail-manager",
     "license": "MIT",
     "authors": [
@@ -12,14 +12,20 @@
         }
     ],
     "require": {
-        "nette/nette": ">=2.1.0"
+        "nette/application": "~2.1",
+        "nette/bootstrap": "~2.1",
+        "latte/latte": "~2.1",
+        "nette/mail": "~2.1",
+        "nette/robot-loader": "~2.1",
+        "nette/utils": "~2.1"
     },
     "require-dev": {
-        "nette/tester": "~1.1.0"
+        "tracy/tracy": "~2.1",
+        "nette/tester": "@dev"
     },
     "autoload": {
         "psr-4": {
-            "h4kuna\\": ""
+            "h4kuna\\MailManager\\": "src\\"
         }
     }
 }

@@ -1,24 +1,31 @@
 <?php
 
+use Nette\Utils\FileSystem;
+
 include __DIR__ . "/../vendor/autoload.php";
 
-if (!class_exists('\Tester\Environment')) {
-    echo 'Install Nette Tester using `composer update --dev`';
-    exit(1);
+function dd($var /* ... */)
+{
+    Tracy\Debugger::enable(FALSE);
+    foreach (func_get_args() as $arg) {
+        \Tracy\Debugger::dump($arg);
+    }
+    exit;
 }
 
+Tester\Environment::setup();
+
+// 2# Create Nette Configurator
 $configurator = new Nette\Configurator;
+
 $tmp = __DIR__ . '/temp/' . php_sapi_name();
-@mkdir($tmp, 0777, TRUE);
+FileSystem::createDir($tmp, 0755);
+FileSystem::createDir($tmp . '/cache/latte', 0755);
 $configurator->enableDebugger($tmp);
 $configurator->setTempDirectory($tmp);
-$configurator->setDebugMode();
-
-$configurator->addConfig(__DIR__ . '/config.neon');
-
+$configurator->setDebugMode(FALSE);
+$configurator->addConfig(__DIR__ . '/test.neon');
 $container = $configurator->createContainer();
-
-Tester\Environment::setup();
 
 return $container;
 

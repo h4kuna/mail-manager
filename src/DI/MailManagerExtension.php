@@ -4,7 +4,8 @@ namespace h4kuna\MailManager\DI;
 
 use Nette\DI\CompilerExtension;
 
-class MailManagerExtension extends CompilerExtension {
+class MailManagerExtension extends CompilerExtension
+{
 
     public $defaults = array(
         'imageDir' => NULL,
@@ -18,7 +19,8 @@ class MailManagerExtension extends CompilerExtension {
         'live' => NULL
     );
 
-    public function loadConfiguration() {
+    public function loadConfiguration()
+    {
         $builder = $this->getContainerBuilder();
 
         $config = $this->getConfig($this->defaults);
@@ -37,24 +39,20 @@ class MailManagerExtension extends CompilerExtension {
 
         // mailer
         if ($config['development']) {
-            $mailerBuilder = $builder->addDefinition($this->prefix('developmentMailer'))
-                            ->setClass('h4kuna\MailManager\Mailer\FileMailer')
-                            ->setArguments(array($config['tempDir']))
-                            ->setAutowired(FALSE);
+            $builder->removeDefinition('nette.mailer');
+            $mailerBuilder = $builder->addDefinition('nette.mailer')
+                    ->setClass('h4kuna\MailManager\Mailer\FileMailer')
+                    ->setArguments(array($config['tempDir']));
 
             if ($config['live'] !== NULL) {
                 $mailerBuilder->addSetup('setLive', array($config['live']));
             }
-
-            $mailer = $this->prefix('@developmentMailer');
-        } else {
-            $mailer = '@nette.mailer';
         }
 
         // MailManager
         $builder->addDefinition($this->prefix('mailManager'))
-                ->setClass('h4kuna\MailManager')
-                ->setArguments(array($mailer, $this->prefix('@templateFactory'), $this->prefix('@messageFactory')))
+                ->setClass('h4kuna\MailManager\MailManager')
+                ->setArguments(array('@nette.mailer', $this->prefix('@templateFactory'), $this->prefix('@messageFactory')))
                 ->addSetup('setImageDir', array($config['imageDir']))
                 ->addSetup('setTemplateDir', array($config['templateDir']));
 
