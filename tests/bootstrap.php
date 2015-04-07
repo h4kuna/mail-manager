@@ -1,8 +1,12 @@
 <?php
 
+use Nette\Utils\FileSystem;
+
 include __DIR__ . "/../vendor/autoload.php";
 
-function dd($var /* ... */) {
+function dd($var /* ... */)
+{
+    Tracy\Debugger::enable(FALSE);
     foreach (func_get_args() as $arg) {
         \Tracy\Debugger::dump($arg);
     }
@@ -15,8 +19,8 @@ Tester\Environment::setup();
 $configurator = new Nette\Configurator;
 
 $tmp = __DIR__ . '/temp/' . php_sapi_name();
-\Nette\Utils\FileSystem::createDir($tmp, 0755);
-\Nette\Utils\FileSystem::createDir($tmp . '/cache/latte', 0755);
+FileSystem::createDir($tmp, 0755);
+FileSystem::createDir($tmp . '/cache/latte', 0755);
 $configurator->enableDebugger($tmp);
 $configurator->setTempDirectory($tmp);
 $configurator->setDebugMode(FALSE);
