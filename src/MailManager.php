@@ -1,6 +1,6 @@
 <?php
 
-namespace h4kuna;
+namespace h4kuna\MailManager;
 
 use h4kuna\MailManager\Message\IMessageFactory;
 use h4kuna\MailManager\Message\SystemMessage;
@@ -103,7 +103,7 @@ class MailManager extends Object implements ArrayAccess {
     }
 
     /**
-     * 
+     *
      * @param string $body
      * @param array $data
      * @return FileTemplate|string
@@ -145,7 +145,7 @@ class MailManager extends Object implements ArrayAccess {
     }
 
     /**
-     * 
+     *
      * @param string $filePath
      * @return bool
      */
@@ -155,7 +155,7 @@ class MailManager extends Object implements ArrayAccess {
 
     /**
      * Add variable to template
-     * 
+     *
      * @param ITemplate $template
      * @param array $data
      * @return ITemplate

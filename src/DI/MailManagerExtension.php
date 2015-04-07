@@ -53,7 +53,7 @@ class MailManagerExtension extends CompilerExtension {
 
         // MailManager
         $builder->addDefinition($this->prefix('mailManager'))
-                ->setClass('h4kuna\MailManager')
+                ->setClass('h4kuna\MailManager\MailManager')
                 ->setArguments(array($mailer, $this->prefix('@templateFactory'), $this->prefix('@messageFactory')))
                 ->addSetup('setImageDir', array($config['imageDir']))
                 ->addSetup('setTemplateDir', array($config['templateDir']));
