@@ -48,6 +48,3 @@ Features
 - if path name containt word plain, than set plain text mail to send
 - parse system mail and send, if you haven't installed sendmail on server
 
-Future
-------
-- macros whose help write email like table
