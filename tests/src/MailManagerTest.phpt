@@ -29,7 +29,8 @@ class MailManagerTest extends TestCase
         $emails = array('foo@example.com' => 'Hello world', 'bar@example.com' => 'test');
         foreach ($emails as $email => $body) {
             /* @var $message Mail\Message */
-            $message = $this->mailManager->createMessage($email, $body, array('variable' => 'Hello'));
+            $message = $this->mailManager->createMessage($body, array('variable' => 'Hello'))
+                    ->addTo($email);
             /**
              * Check returned object
              */

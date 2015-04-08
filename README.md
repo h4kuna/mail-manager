@@ -7,16 +7,12 @@ This extension for [Nette framework 2.1+](http://nette.org/). Support testing ma
 Installation to project
 -----------------------
 ```sh
-$ composer require h4kuna/mail-manager 1.0.2
+$ composer require h4kuna/mail-manager @dev
 ```
-
-Example NEON config
--------------------
-look at to tests/config.neon
 
 How to use
 ----------
-Add to your file neon
+Add to your file NEON
 ```
 extensions:
     mailManagerExtension: h4kuna\MailManager\DI\MailManagerExtension
@@ -34,9 +30,10 @@ Prepare latte file in **$templateDir/test-file.latte**
 Send mail.
 ```php
 /* @var $mailer h4kuna\MailManager\MailManager */
-$message = $mailer->createMessage('Milan Matejcek <milan.matejcek@gmail.com>', 'test-file', ['foo' => 'bar']);
+$message = $mailer->createMessage('test-file', ['foo' => 'bar'])
+           ->addTo('Milan Matejcek <milan.matejcek@gmail.com>');
 /* @var $message Nette\Mail\Message */
-$message->setFrom('bar@example.com'); // avaible is 'mail' or 'name <mail>'
+$message->addBc('bar@example.com'); // avaible is 'mail' or 'name <mail>'
 $mailer->send(); // if anything bad throw exception
 ```
 

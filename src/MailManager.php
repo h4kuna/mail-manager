@@ -93,18 +93,12 @@ class MailManager extends Object implements ArrayAccess
     }
 
     /**
-     * @param string|array $to email or email <name>
      * @param string|ITemplate $body content or filepath
      * @return Message
      */
-    public function createMessage($to, $body, array $data = array())
+    public function createMessage($body, array $data = array())
     {
         $this->_createMessage();
-        $name = NULL;
-        if(is_array($to)) {
-            list($to, $name) = $to;
-        }
-        $this->message->addTo($to, $name);
         if ($body instanceof ITemplate) {
             $template = $body;
         } else {
