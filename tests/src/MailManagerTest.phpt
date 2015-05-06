@@ -35,7 +35,7 @@ class MailManagerTest extends TestCase
              * Check returned object
              */
             Assert::true($message instanceof Mail\Message);
-            $this->mailManager->send();
+            $this->mailManager->send($message);
 
             /**
              * Check temporary file
@@ -47,8 +47,8 @@ class MailManagerTest extends TestCase
 
     public function testParseSystemMail()
     {
-        $this->mailManager->createSystemMail(file_get_contents(__DIR__ . '/template/system-mail.eml'));
-        $this->mailManager->send();
+        $message = $this->mailManager->createSystemMail(file_get_contents(__DIR__ . '/template/system-mail.eml'));
+        $this->mailManager->send($message);
         Assert::true(file_exists($this->mailer->getLastFile()));
         Assert::true(filesize($this->mailer->getLastFile()) > 0);
     }

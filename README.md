@@ -7,7 +7,7 @@ This extension for [Nette framework 2.1+](http://nette.org/). Support testing ma
 Installation to project
 -----------------------
 ```sh
-$ composer require h4kuna/mail-manager @dev
+$ composer require h4kuna/mail-manager
 ```
 
 How to use
@@ -20,6 +20,19 @@ extensions:
 mailManagerExtension:
     from: default@example.com
     templateDir: %appDir%/template # home for mail template
+
+    # optional
+    imageDir: # path to assets
+    returnPath: # where back mail whose send non exists mail
+    messageFactory: # prepare for Message instance
+
+    # development
+    development: # enable FileMailer whose save email to file
+    tempDir: # where save email to file
+    live: # how long live email file in temp directory
+        # - FALSE - forever
+        # - NULL - one per request clear (default)
+        # - '+10 minute' - relative time
 ```
 
 Prepare latte file in **$templateDir/test-file.latte**
@@ -34,14 +47,14 @@ $message = $mailer->createMessage('test-file', ['foo' => 'bar'])
            ->addTo('Milan Matejcek <milan.matejcek@gmail.com>');
 /* @var $message Nette\Mail\Message */
 $message->addBc('bar@example.com'); // avaible is 'mail' or 'name <mail>'
-$mailer->send(); // if anything bad throw exception
+$mailer->send($message); // if anything bad throw exception
 ```
 
 Features
 --------
 - display email as html page, call MailManager::createTemplate($body, $data) with same parameters like MailManager::createMessage(..., $body, $data)
 - on development machine default save to file
-- autoremove saved email, livetime is 1 minute
+- autoremove saved email
 - if path name containt word plain, than set plain text mail to send
 - parse system mail and send, if you haven't installed sendmail on server
 

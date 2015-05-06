@@ -2,27 +2,21 @@
 
 namespace h4kuna\MailManager;
 
-use h4kuna\MailManager\Message\IMessageFactory;
-use h4kuna\MailManager\Message\SystemMessage;
-use h4kuna\MailManager\Template\ITemplateFactory;
-use Nette\DirectoryNotFoundException;
-use Nette\Mail\IMailer;
-use Nette\Mail\Message;
-use Nette\Object;
-use Nette\Templating\FileTemplate;
-use Nette\Application\UI\ITemplate;
-use ArrayAccess;
+use h4kuna\MailManager\Message,
+    h4kuna\MailManager\Template\ITemplateFactory,
+    Latte\Template,
+    Nette\Application\UI\ITemplate,
+    Nette\DirectoryNotFoundException,
+    Nette\Mail,
+    Nette\Object;
 
-class MailManager extends Object implements ArrayAccess
+class MailManager extends Object implements \ArrayAccess
 {
 
-    /** @var IMailer */
+    /** @var Mail\IMailer */
     private $mailer;
 
-    /** @var Message */
-    private $message;
-
-    /** @var IMessageFactory */
+    /** @var Message\IMessageFactory */
     private $messageFactory;
 
     /** @var ITemplateFactory */
@@ -35,24 +29,25 @@ class MailManager extends Object implements ArrayAccess
     private $mailDir;
 
     /** @var string */
-    private $imageDir;
+    private $baseDir;
 
-    /** @var \Latte\Template[] */
+    /** @var Template[] */
     private $templates = array();
 
-    /** @var \Latte\Template */
+    /** @var Template */
     private $lastTemplate;
 
     /** @var array */
     public $onCreateMessage;
 
-    public function __construct(IMailer $mailer, ITemplateFactory $templateFactory, IMessageFactory $messageFactory)
+    public function __construct(Mail\IMailer $mailer, ITemplateFactory $templateFactory, Message\IMessageFactory $messageFactory)
     {
         $this->mailer = $mailer;
         $this->messageFactory = $messageFactory;
         $this->templateFactory = $templateFactory;
     }
 
+    /** @var Template */
     public function getLastTemplate()
     {
         return $this->lastTemplate;
@@ -70,7 +65,7 @@ class MailManager extends Object implements ArrayAccess
         if (!$dir) {
             throw new DirectoryNotFoundException($path);
         }
-        $this->imageDir = $dir;
+        $this->baseDir = $dir;
         return $this;
     }
 
@@ -86,41 +81,35 @@ class MailManager extends Object implements ArrayAccess
         return $this;
     }
 
-    /** @return Message */
-    private function _createMessage()
-    {
-        return $this->message = $this->messageFactory->create();
-    }
-
     /**
      * @param string|ITemplate $body content or filepath
-     * @return Message
+     * @return Mail\Message
      */
     public function createMessage($body, array $data = array())
     {
-        $this->_createMessage();
+        $message = $this->messageFactory->create();
         if ($body instanceof ITemplate) {
             $template = $body;
         } else {
             $template = $this->createTemplate($body, $data);
         }
 
-        $this->onCreateMessage($this->message, $template, $this->messageFactory);
+        $this->onCreateMessage($message, $template, $this->messageFactory);
 
         if ($this->html) {
-            $this->message->setHtmlBody($template, $this->imageDir);
+            $message->setHtmlBody($template, $this->baseDir);
         } else {
-            $this->message->setBody($template);
+            $message->setBody($template);
         }
 
-        return $this->message;
+        return $message;
     }
 
     /**
      *
      * @param string $body
      * @param array $data
-     * @return FileTemplate|string
+     * @return Template|string
      */
     public function createTemplate($body, array $data = array())
     {
@@ -137,7 +126,7 @@ class MailManager extends Object implements ArrayAccess
         $template = $this->loadTemplate($filePath);
         $this->bindTemplate($template, $data);
         $template->action = $body;
-        $template->imageDir = '';
+        $template->baseDir = '';
 
         return $this->lastTemplate = $this->templates[$filePath] = $template;
     }
@@ -201,16 +190,9 @@ class MailManager extends Object implements ArrayAccess
     /**
      * Send email
      */
-    public function send()
+    public function send($message)
     {
-        $this->mailer->send($this->message);
-    }
-
-    /** @return Message */
-    public function getMessage()
-    {
-        $this->message || $this->_createMessage();
-        return $this->message;
+        $this->mailer->send($message);
     }
 
     /**
@@ -220,12 +202,12 @@ class MailManager extends Object implements ArrayAccess
      */
     public function createSystemMail($content)
     {
-        $message = new SystemMessage();
-        $msg = $this->_createMessage();
+        $message = new Message\SystemMessage();
+        $msg = $this->messageFactory->create();
         $message->setFrom($msg->getFrom());
         $message->setReturnPath($msg->getReturnPath());
         $message->setBody($content);
-        return $this->message = $message;
+        return $message;
     }
 
     public function offsetExists($offset)
