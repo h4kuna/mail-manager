@@ -46,7 +46,7 @@ Send mail.
 $message = $mailer->createMessage('test-file', ['foo' => 'bar'])
            ->addTo('Milan Matejcek <milan.matejcek@gmail.com>');
 /* @var $message Nette\Mail\Message */
-$message->addBc('bar@example.com'); // avaible is 'mail' or 'name <mail>'
+$message->addBcc('bar@example.com'); // avaible is 'mail' or 'name <mail>'
 $mailer->send($message); // if anything bad throw exception
 ```
 
