@@ -21,7 +21,7 @@
     },
     "require-dev": {
         "tracy/tracy": "~2.1",
-        "nette/tester": "@dev"
+        "nette/tester": "~1.5"
     },
     "autoload": {
         "psr-4": {
