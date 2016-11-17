@@ -32,7 +32,7 @@ class MailManager extends Object implements \ArrayAccess
     private $baseDir;
 
     /** @var Template[] */
-    private $templates = array();
+    private $templates = [];
 
     /** @var Template */
     private $lastTemplate;
@@ -85,7 +85,7 @@ class MailManager extends Object implements \ArrayAccess
      * @param string|ITemplate $body content or filepath
      * @return Mail\Message
      */
-    public function createMessage($body, array $data = array())
+    public function createMessage($body, array $data = [])
     {
         $message = $this->messageFactory->create();
         if ($body instanceof ITemplate) {
@@ -111,7 +111,7 @@ class MailManager extends Object implements \ArrayAccess
      * @param array $data
      * @return Template|string
      */
-    public function createTemplate($body, array $data = array())
+    public function createTemplate($body, array $data = [])
     {
         $filePath = $this->checkFile($body);
         if (!$filePath) {

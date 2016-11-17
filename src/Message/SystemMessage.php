@@ -48,9 +48,9 @@ class SystemMessage extends Message
     private function toString($email, $name = NULL)
     {
         if (is_array($email)) {
-            return array(key($email), current($email));
+            return [key($email), current($email)];
         }
-        return array($email, $name);
+        return [$email, $name];
     }
 
 }

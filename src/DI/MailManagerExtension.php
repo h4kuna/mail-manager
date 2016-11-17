@@ -7,7 +7,7 @@ use Nette\DI\CompilerExtension;
 class MailManagerExtension extends CompilerExtension
 {
 
-    public $defaults = array(
+    public $defaults = [
         'imageDir' => NULL,
         'templateDir' => NULL,
         'tempDir' => '%tempDir%/mails',
@@ -17,7 +17,7 @@ class MailManagerExtension extends CompilerExtension
         'messageFactory' => 'h4kuna\MailManager\Message\MessageFactory',
         'development' => '%debugMode%',
         'live' => NULL
-    );
+    ];
 
     public function loadConfiguration()
     {
@@ -29,8 +29,8 @@ class MailManagerExtension extends CompilerExtension
         $builder->addDefinition($this->prefix('messageFactory'))
                 ->setClass($config['messageFactory'])
                 ->setAutowired(FALSE)
-                ->addSetup('setFrom', array($config['from']))
-                ->addSetup('setReturnPath', array($config['returnPath']));
+                ->addSetup('setFrom', [$config['from']])
+                ->addSetup('setReturnPath', [$config['returnPath']]);
 
         // storage factory
         $templateFactory = $builder->addDefinition($this->prefix('templateFactory'));
@@ -42,19 +42,19 @@ class MailManagerExtension extends CompilerExtension
             $builder->removeDefinition('nette.mailer');
             $mailerBuilder = $builder->addDefinition('nette.mailer')
                     ->setClass('h4kuna\MailManager\Mailer\FileMailer')
-                    ->setArguments(array($config['tempDir']));
+                    ->setArguments([$config['tempDir']]);
 
             if ($config['live'] !== NULL) {
-                $mailerBuilder->addSetup('setLive', array($config['live']));
+                $mailerBuilder->addSetup('setLive', [$config['live']]);
             }
         }
 
         // MailManager
         $builder->addDefinition($this->prefix('mailManager'))
                 ->setClass('h4kuna\MailManager\MailManager')
-                ->setArguments(array('@nette.mailer', $this->prefix('@templateFactory'), $this->prefix('@messageFactory')))
-                ->addSetup('setImageDir', array($config['imageDir']))
-                ->addSetup('setTemplateDir', array($config['templateDir']));
+                ->setArguments(['@nette.mailer', $this->prefix('@templateFactory'), $this->prefix('@messageFactory')])
+                ->addSetup('setImageDir', [$config['imageDir']])
+                ->addSetup('setTemplateDir', [$config['templateDir']]);
 
         return $builder;
     }
