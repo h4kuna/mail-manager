@@ -11,6 +11,6 @@ use Nette\Templating\ITemplate;
 interface ITemplateFactory
 {
 
-    /** @var ITemplate */
-    public function create();
+	/** @var ITemplate */
+	public function create();
 }

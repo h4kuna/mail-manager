@@ -6,11 +6,11 @@ include __DIR__ . "/../vendor/autoload.php";
 
 function dd($var /* ... */)
 {
-    Tracy\Debugger::enable(FALSE);
-    foreach (func_get_args() as $arg) {
-        \Tracy\Debugger::dump($arg);
-    }
-    exit;
+	Tracy\Debugger::enable(FALSE);
+	foreach (func_get_args() as $arg) {
+		\Tracy\Debugger::dump($arg);
+	}
+	exit;
 }
 
 Tester\Environment::setup();

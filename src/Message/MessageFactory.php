@@ -12,37 +12,37 @@ use Nette\Object;
 class MessageFactory extends Object implements IMessageFactory
 {
 
-    /** @var string */
-    private $from;
+	/** @var string */
+	private $from;
 
-    /** @var string */
-    private $returnPath;
+	/** @var string */
+	private $returnPath;
 
-    public function setFrom($from)
-    {
-        $this->from = $from;
-    }
+	public function setFrom($from)
+	{
+		$this->from = $from;
+	}
 
-    public function setReturnPath($returnPath)
-    {
-        $this->returnPath = $returnPath;
-    }
+	public function setReturnPath($returnPath)
+	{
+		$this->returnPath = $returnPath;
+	}
 
-    /**
-     *
-     * @return Message
-     */
-    public function create()
-    {
-        $message = new Message;
-        if ($this->from) {
-            $message->setFrom($this->from);
-        }
+	/**
+	 *
+	 * @return Message
+	 */
+	public function create()
+	{
+		$message = new Message;
+		if ($this->from) {
+			$message->setFrom($this->from);
+		}
 
-        if ($this->returnPath) {
-            $message->setReturnPath($this->returnPath);
-        }
-        return $message;
-    }
+		if ($this->returnPath) {
+			$message->setReturnPath($this->returnPath);
+		}
+		return $message;
+	}
 
 }

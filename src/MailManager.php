@@ -3,231 +3,231 @@
 namespace h4kuna\MailManager;
 
 use h4kuna\MailManager\Message,
-    h4kuna\MailManager\Template\ITemplateFactory,
-    Latte\Template,
-    Nette\Application\UI\ITemplate,
-    Nette\DirectoryNotFoundException,
-    Nette\Mail,
-    Nette\Object;
+	h4kuna\MailManager\Template\ITemplateFactory,
+	Latte\Template,
+	Nette\Application\UI\ITemplate,
+	Nette\DirectoryNotFoundException,
+	Nette\Mail,
+	Nette\Object;
 
 class MailManager extends Object implements \ArrayAccess
 {
 
-    /** @var Mail\IMailer */
-    private $mailer;
+	/** @var Mail\IMailer */
+	private $mailer;
 
-    /** @var Message\IMessageFactory */
-    private $messageFactory;
+	/** @var Message\IMessageFactory */
+	private $messageFactory;
 
-    /** @var ITemplateFactory */
-    private $templateFactory;
+	/** @var ITemplateFactory */
+	private $templateFactory;
 
-    /** @var bool */
-    private $html = TRUE;
+	/** @var bool */
+	private $html = TRUE;
 
-    /** @var string */
-    private $mailDir;
+	/** @var string */
+	private $mailDir;
 
-    /** @var string */
-    private $baseDir;
+	/** @var string */
+	private $baseDir;
 
-    /** @var Template[] */
-    private $templates = [];
+	/** @var Template[] */
+	private $templates = [];
 
-    /** @var Template */
-    private $lastTemplate;
+	/** @var Template */
+	private $lastTemplate;
 
-    /** @var array */
-    public $onCreateMessage;
+	/** @var array */
+	public $onCreateMessage;
 
-    public function __construct(Mail\IMailer $mailer, ITemplateFactory $templateFactory, Message\IMessageFactory $messageFactory)
-    {
-        $this->mailer = $mailer;
-        $this->messageFactory = $messageFactory;
-        $this->templateFactory = $templateFactory;
-    }
+	public function __construct(Mail\IMailer $mailer, ITemplateFactory $templateFactory, Message\IMessageFactory $messageFactory)
+	{
+		$this->mailer = $mailer;
+		$this->messageFactory = $messageFactory;
+		$this->templateFactory = $templateFactory;
+	}
 
-    /** @var Template */
-    public function getLastTemplate()
-    {
-        return $this->lastTemplate;
-    }
+	/** @var Template */
+	public function getLastTemplate()
+	{
+		return $this->lastTemplate;
+	}
 
-    public function setTemplateDir($path)
-    {
-        $this->mailDir = realpath($path);
-        return $this;
-    }
+	public function setTemplateDir($path)
+	{
+		$this->mailDir = realpath($path);
+		return $this;
+	}
 
-    public function setImageDir($path)
-    {
-        $dir = realpath($path);
-        if (!$dir) {
-            throw new DirectoryNotFoundException($path);
-        }
-        $this->baseDir = $dir;
-        return $this;
-    }
+	public function setImageDir($path)
+	{
+		$dir = realpath($path);
+		if (!$dir) {
+			throw new DirectoryNotFoundException($path);
+		}
+		$this->baseDir = $dir;
+		return $this;
+	}
 
-    public function onHtml()
-    {
-        $this->html = TRUE;
-        return $this;
-    }
+	public function onHtml()
+	{
+		$this->html = TRUE;
+		return $this;
+	}
 
-    public function offHtml()
-    {
-        $this->html = FALSE;
-        return $this;
-    }
+	public function offHtml()
+	{
+		$this->html = FALSE;
+		return $this;
+	}
 
-    /**
-     * @param string|ITemplate $body content or filepath
-     * @return Mail\Message
-     */
-    public function createMessage($body, array $data = [])
-    {
-        $message = $this->messageFactory->create();
-        if ($body instanceof ITemplate) {
-            $template = $body;
-        } else {
-            $template = $this->createTemplate($body, $data);
-        }
+	/**
+	 * @param string|ITemplate $body content or filepath
+	 * @return Mail\Message
+	 */
+	public function createMessage($body, array $data = [])
+	{
+		$message = $this->messageFactory->create();
+		if ($body instanceof ITemplate) {
+			$template = $body;
+		} else {
+			$template = $this->createTemplate($body, $data);
+		}
 
-        $this->onCreateMessage($message, $template, $this->messageFactory);
+		$this->onCreateMessage($message, $template, $this->messageFactory);
 
-        if ($this->html) {
-            $message->setHtmlBody($template, $this->baseDir);
-        } else {
-            $message->setBody($template);
-        }
+		if ($this->html) {
+			$message->setHtmlBody($template, $this->baseDir);
+		} else {
+			$message->setBody($template);
+		}
 
-        return $message;
-    }
+		return $message;
+	}
 
-    /**
-     *
-     * @param string $body
-     * @param array $data
-     * @return Template|string
-     */
-    public function createTemplate($body, array $data = [])
-    {
-        $filePath = $this->checkFile($body);
-        if (!$filePath) {
-            return $body;
-        }
+	/**
+	 *
+	 * @param string $body
+	 * @param array $data
+	 * @return Template|string
+	 */
+	public function createTemplate($body, array $data = [])
+	{
+		$filePath = $this->checkFile($body);
+		if (!$filePath) {
+			return $body;
+		}
 
-        if ($this->issetTemplate($filePath)) {
-            $template = $this->templates[$filePath];
-            return $this->bindTemplate($template, $data);
-        }
+		if ($this->issetTemplate($filePath)) {
+			$template = $this->templates[$filePath];
+			return $this->bindTemplate($template, $data);
+		}
 
-        $template = $this->loadTemplate($filePath);
-        $this->bindTemplate($template, $data);
-        $template->action = $body;
-        $template->baseDir = '';
+		$template = $this->loadTemplate($filePath);
+		$this->bindTemplate($template, $data);
+		$template->action = $body;
+		$template->baseDir = '';
 
-        return $this->lastTemplate = $this->templates[$filePath] = $template;
-    }
+		return $this->lastTemplate = $this->templates[$filePath] = $template;
+	}
 
-    /**
-     *
-     * @param string $filePath
-     * @return string|boolean
-     */
-    private function checkFile($filePath)
-    {
-        $file = $this->mailDir . DIRECTORY_SEPARATOR . $filePath . '.latte';
-        if ($this->mailDir && is_file($file)) {
-            return $file;
-        }
+	/**
+	 *
+	 * @param string $filePath
+	 * @return string|boolean
+	 */
+	private function checkFile($filePath)
+	{
+		$file = $this->mailDir . DIRECTORY_SEPARATOR . $filePath . '.latte';
+		if ($this->mailDir && is_file($file)) {
+			return $file;
+		}
 
-        if (is_file($filePath)) {
-            return $filePath;
-        }
-        return FALSE;
-    }
+		if (is_file($filePath)) {
+			return $filePath;
+		}
+		return FALSE;
+	}
 
-    /**
-     *
-     * @param string $filePath
-     * @return bool
-     */
-    private function issetTemplate($filePath)
-    {
-        return isset($this->templates[$filePath]);
-    }
+	/**
+	 *
+	 * @param string $filePath
+	 * @return bool
+	 */
+	private function issetTemplate($filePath)
+	{
+		return isset($this->templates[$filePath]);
+	}
 
-    /**
-     * Add variable to template
-     *
-     * @param ITemplate $template
-     * @param array $data
-     * @return ITemplate
-     */
-    private function bindTemplate(ITemplate $template, array $data)
-    {
-        foreach ($data as $key => $value) {
-            $template->{$key} = $value;
-        }
-        return $template;
-    }
+	/**
+	 * Add variable to template
+	 *
+	 * @param ITemplate $template
+	 * @param array $data
+	 * @return ITemplate
+	 */
+	private function bindTemplate(ITemplate $template, array $data)
+	{
+		foreach ($data as $key => $value) {
+			$template->{$key} = $value;
+		}
+		return $template;
+	}
 
-    /**
-     *
-     * @param string $file
-     * @return ITemplate
-     */
-    private function loadTemplate($file)
-    {
-        $this->html = strpos($file, 'plain') === FALSE;
-        $template = $this->templateFactory->create();
-        $template->setFile($file);
-        return $template;
-    }
+	/**
+	 *
+	 * @param string $file
+	 * @return ITemplate
+	 */
+	private function loadTemplate($file)
+	{
+		$this->html = strpos($file, 'plain') === FALSE;
+		$template = $this->templateFactory->create();
+		$template->setFile($file);
+		return $template;
+	}
 
-    /**
-     * Send email
-     */
-    public function send($message)
-    {
-        $this->mailer->send($message);
-    }
+	/**
+	 * Send email
+	 */
+	public function send($message)
+	{
+		$this->mailer->send($message);
+	}
 
-    /**
-     * Plain message generated by function mail
-     *
-     * @param string $content
-     */
-    public function createSystemMail($content)
-    {
-        $message = new Message\SystemMessage();
-        $msg = $this->messageFactory->create();
-        $message->setFrom($msg->getFrom());
-        $message->setReturnPath($msg->getReturnPath());
-        $message->setBody($content);
-        return $message;
-    }
+	/**
+	 * Plain message generated by function mail
+	 *
+	 * @param string $content
+	 */
+	public function createSystemMail($content)
+	{
+		$message = new Message\SystemMessage();
+		$msg = $this->messageFactory->create();
+		$message->setFrom($msg->getFrom());
+		$message->setReturnPath($msg->getReturnPath());
+		$message->setBody($content);
+		return $message;
+	}
 
-    public function offsetExists($offset)
-    {
-        return $this->issetTemplate($this->checkFile($offset));
-    }
+	public function offsetExists($offset)
+	{
+		return $this->issetTemplate($this->checkFile($offset));
+	}
 
-    public function offsetGet($offset)
-    {
-        return $this->templates[$this->checkFile($offset)];
-    }
+	public function offsetGet($offset)
+	{
+		return $this->templates[$this->checkFile($offset)];
+	}
 
-    public function offsetSet($offset, $value)
-    {
-        return $this->templates[$this->checkFile($offset)] = $value;
-    }
+	public function offsetSet($offset, $value)
+	{
+		return $this->templates[$this->checkFile($offset)] = $value;
+	}
 
-    public function offsetUnset($offset)
-    {
-        unset($this->templates[$this->checkFile($offset)]);
-    }
+	public function offsetUnset($offset)
+	{
+		unset($this->templates[$this->checkFile($offset)]);
+	}
 
 }

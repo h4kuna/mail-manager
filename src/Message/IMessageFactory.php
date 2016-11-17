@@ -11,20 +11,20 @@ use Nette\Mail\Message;
 interface IMessageFactory
 {
 
-    /**
-     * @return Message
-     */
-    public function create();
+	/**
+	 * @return Message
+	 */
+	public function create();
 
-    /**
-     *
-     * @param string $email
-     */
-    public function setFrom($email);
+	/**
+	 *
+	 * @param string $email
+	 */
+	public function setFrom($email);
 
-    /**
-     *
-     * @param string $email
-     */
-    public function setReturnPath($email);
+	/**
+	 *
+	 * @param string $email
+	 */
+	public function setReturnPath($email);
 }
