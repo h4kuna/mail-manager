@@ -2,10 +2,8 @@
 
 namespace h4kuna\MailManager\Mailer;
 
-use Nette\Mail\IMailer,
-	Nette\Mail\Message,
-	Nette\Utils\FileSystem,
-	Nette\Utils\Finder;
+use Nette\Mail,
+	Nette\Utils;
 
 /**
  * File Mailer - store mail to server uploads (file)
@@ -15,14 +13,11 @@ use Nette\Mail\IMailer,
  * @author Milan Matejcek
  *
  */
-class FileMailer implements IMailer
+class FileMailer implements Mail\IMailer
 {
 
 	/** @var string */
 	private $path;
-
-	/** @var string */
-	private $extension = 'eml';
 
 	/** @var string */
 	private $live = '1 minute';
@@ -35,14 +30,8 @@ class FileMailer implements IMailer
 	 */
 	public function __construct($path)
 	{
-		FileSystem::createDir($path);
+		Utils\FileSystem::createDir($path);
 		$this->path = realpath($path) . DIRECTORY_SEPARATOR;
-	}
-
-	public function setExtension($extension)
-	{
-		$this->extension = $extension;
-		return $this;
 	}
 
 	public function setLive($live)
@@ -57,23 +46,22 @@ class FileMailer implements IMailer
 	}
 
 	/**
-	 * @param Message $mail
+	 * @param Mail\Message $mail
 	 */
-	public function send(Message $mail)
+	public function send(Mail\Message $mail)
 	{
 		$this->autoremove();
 		list($sec) = explode(' ', substr(microtime(), 2));
-		$this->lastFile = $this->path . date('Y-m-d_H-i-s-') . $sec . '.' . $this->extension;
+		$this->lastFile = $this->path . date('Y-m-d_H-i-s-') . $sec . '.eml';
 		file_put_contents($this->lastFile, $mail->generateMessage());
 	}
 
-	/** @return void */
 	private function autoremove()
 	{
 		if (!$this->live) {
 			return;
 		}
-		$finder = Finder::findFiles('*.' . $this->extension);
+		$finder = Utils\Finder::findFiles('*.' . $this->extension);
 		if (is_string($this->live)) {
 			$finder->date('<=', "- {$this->live}");
 		}
