@@ -2,41 +2,31 @@
 
 namespace h4kuna\MailManager\Template;
 
-use Nette\DI\Container;
+use Nette\Application;
 
 /**
- *
  * @author Milan Matějček
  */
 class TemplateFactory implements ITemplateFactory
 {
 
-	/** @var Container */
-	private $container;
+	/** @var Application\UI\ITemplateFactory */
+	private $templateFactory;
 
-	function __construct(Container $container)
+	/** @var Application\LinkGenerator */
+	private $linkGenerator;
+
+	public function __construct(Application\UI\ITemplateFactory $templateFactory, Application\LinkGenerator $linkGenerator)
 	{
-		$this->container = $container;
+		$this->templateFactory = $templateFactory;
+		$this->linkGenerator = $linkGenerator;
 	}
 
 	public function create()
 	{
-		return $this->getTemplateFactory()->createTemplate($this->getPresenter());
-	}
-
-	private function getPresenter()
-	{
-		$presenter = $this->container->getService('application')->getPresenter();
-		if ($presenter) {
-			return $presenter;
-		}
-		return new FakeControl;
-	}
-
-	/** @return \Nette\Bridges\ApplicationLatte\TemplateFactory */
-	private function getTemplateFactory()
-	{
-		return $this->container->createService('nette.templateFactory');
+		$template = $this->templateFactory->createTemplate();
+		$template->getLatte()->addProvider('uiControl', $this->linkGenerator);
+		return $template;
 	}
 
 }

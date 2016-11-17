@@ -1,9 +1,8 @@
 php:
     date.timezone: Europe/Prague
 
-nette:
-    container:
-        debugger: TRUE
+application:
+	scanDirs: false
 
 extensions:
     mailManagerExtension: h4kuna\MailManager\DI\MailManagerExtension

@@ -2,7 +2,7 @@ MailManager
 -----------
 [![Build Status](https://travis-ci.org/h4kuna/mail-manager.svg?branch=master)](https://travis-ci.org/h4kuna/mail-manager)
 
-This extension for [Nette framework 2.1+](http://nette.org/). Support testing mails
+This extension for [Nette framework 2.4+](http://nette.org/). Support testing mails
 
 Installation to project
 -----------------------
@@ -22,7 +22,8 @@ mailManagerExtension:
     templateDir: %appDir%/template # home for mail template
 
     # optional
-    imageDir: # path to assets
+	plainMacro: # where will find email like plain text alternative default: %file%-plain
+    assetsDir: # path to assets
     returnPath: # where back mail whose send non exists mail
     messageFactory: # prepare for Message instance
 
@@ -31,8 +32,16 @@ mailManagerExtension:
     tempDir: # where save email to file
     live: # how long live email file in temp directory
         # - FALSE - forever
-        # - NULL - one per request clear (default)
-        # - '+10 minute' - relative time
+        # - '+1 minute' - relative time (default)
+```
+
+Support different templates for plain text and for html.
+```php
+$message = $mailer->createMessage('body', ['foo' => $foo, 'bar' => $bar]);
+
+// if you have body.latte (for html) and body-plain.latte (for plain text) in same directory, then is used. And bind variables onetime.
+
+$mailer->send($message);
 ```
 
 Prepare latte file in **$templateDir/test-file.latte**
@@ -52,7 +61,7 @@ $mailer->send($message); // if anything bad throw exception
 
 Features
 --------
-- display email as html page, call MailManager::createTemplate($body, $data) with same parameters like MailManager::createMessage(..., $body, $data)
+- display email as html page
 - on development machine default save to file
 - autoremove saved email
 - if path name containt word plain, than set plain text mail to send

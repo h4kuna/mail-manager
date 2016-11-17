@@ -2,52 +2,47 @@
 
 namespace h4kuna\MailManager;
 
-use h4kuna\MailManager\Mailer\FileMailer,
+use h4kuna\MailManager\Mailer,
 	Nette\Mail,
-	Tester\Assert,
-	Tester\TestCase;
+	Tester\Assert;
 
 $container = require __DIR__ . '/../bootstrap.php';
 
-class MailManagerTest extends TestCase
+class MailManagerTest extends \Tester\TestCase
 {
 
 	/** @var MailManager */
 	private $mailManager;
 
-	/** @var FileMailer */
+	/** @var Mailer\FileMailer */
 	private $mailer;
 
-	function __construct(MailManager $mailManager, FileMailer $mailer)
+	function __construct(MailManager $mailManager, Mailer\FileMailer $mailer)
 	{
 		$this->mailManager = $mailManager;
 		$this->mailer = $mailer;
 	}
 
-	public function testSend()
+	/**
+	 * @dataProvider mailManagettest-send.ini
+	 */
+	public function testSend($email, $body)
 	{
-		$emails = array('foo@example.com' => 'Hello world', 'bar@example.com' => 'test');
-		foreach ($emails as $email => $body) {
-			/* @var $message Mail\Message */
-			$message = $this->mailManager->createMessage($body, array('variable' => 'Hello'))
-				->addTo($email);
-			/**
-			 * Check returned object
-			 */
-			Assert::true($message instanceof Mail\Message);
-			$this->mailManager->send($message);
+		$message = $this->mailManager->createMessage($body, array('variable' => 'Hello'))
+			->addTo($email);
 
-			/**
-			 * Check temporary file
-			 */
-			Assert::true(file_exists($this->mailer->getLastFile()));
-			Assert::true(filesize($this->mailer->getLastFile()) > 0);
-		}
+		/* Check returned object */
+		Assert::true($message instanceof Mail\Message);
+		$this->mailManager->send($message);
+
+		/* Check temporary file */
+		Assert::true(file_exists($this->mailer->getLastFile()));
+		Assert::true(filesize($this->mailer->getLastFile()) > 0);
 	}
 
 	public function testParseSystemMail()
 	{
-		$message = $this->mailManager->createSystemMail(file_get_contents(__DIR__ . '/template/system-mail.eml'));
+		$message = $this->mailManager->createSystemMail(file_get_contents(__DIR__ . '/../template/system-mail.eml'));
 		$this->mailManager->send($message);
 		Assert::true(file_exists($this->mailer->getLastFile()));
 		Assert::true(filesize($this->mailer->getLastFile()) > 0);
@@ -58,9 +53,8 @@ class MailManagerTest extends TestCase
 /* @var $mailManager MailManager */
 $mailManager = $container->getByType('h4kuna\MailManager\MailManager');
 
-/* @var $mailer FileMailer */
-$mailer = $container->getByType('h4kuna\MailManager\Mailer\FileMailer');
+/* @var $mailer Mailer\FileMailer */
+$mailer = $container->getService('mailManagerExtension.fileMailer');
 
-$test = new MailManagerTest($mailManager, $mailer);
-$test->run();
+(new MailManagerTest($mailManager, $mailer))->run();
 

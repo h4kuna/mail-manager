@@ -20,7 +20,7 @@ class FileMailer implements Mail\IMailer
 	private $path;
 
 	/** @var string */
-	private $live = '1 minute';
+	private $live;
 
 	/** @var string */
 	private $lastFile;
@@ -61,7 +61,7 @@ class FileMailer implements Mail\IMailer
 		if (!$this->live) {
 			return;
 		}
-		$finder = Utils\Finder::findFiles('*.' . $this->extension);
+		$finder = Utils\Finder::findFiles('*.eml');
 		if (is_string($this->live)) {
 			$finder->date('<=', "- {$this->live}");
 		}

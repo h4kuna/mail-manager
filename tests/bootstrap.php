@@ -1,31 +1,27 @@
 <?php
 
-use Nette\Utils\FileSystem;
+use Nette\Utils;
 
 include __DIR__ . "/../vendor/autoload.php";
-
-function dd($var /* ... */)
-{
-	Tracy\Debugger::enable(FALSE);
-	foreach (func_get_args() as $arg) {
-		\Tracy\Debugger::dump($arg);
-	}
-	exit;
-}
 
 Tester\Environment::setup();
 
 // 2# Create Nette Configurator
 $configurator = new Nette\Configurator;
 
-$tmp = __DIR__ . '/temp/' . php_sapi_name();
-FileSystem::createDir($tmp, 0755);
-FileSystem::createDir($tmp . '/cache/latte', 0755);
-$configurator->enableDebugger($tmp);
+Salamium\Testinium\File::setRoot(__DIR__ . '/data');
+
+$tmp = __DIR__ . '/temp';
+$logDir = $tmp . '/log';
+Utils\FileSystem::createDir($logDir);
+Utils\FileSystem::createDir($tmp . '/cache/latte');
+$configurator->enableDebugger($logDir);
 $configurator->setTempDirectory($tmp);
-$configurator->setDebugMode(FALSE);
+$configurator->setDebugMode(TRUE);
 $configurator->addConfig(__DIR__ . '/test.neon');
 $container = $configurator->createContainer();
+
+Tracy\Debugger::enable(FALSE);
 
 return $container;
 

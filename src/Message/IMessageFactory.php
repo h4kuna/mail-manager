@@ -16,12 +16,7 @@ interface IMessageFactory
 	function create();
 
 	/**
-	 * @param string $email
+	 * @return SystemMessage
 	 */
-	function setFrom($email);
-
-	/**
-	 * @param string $email
-	 */
-	function setReturnPath($email);
+	function createSystemMessage();
 }

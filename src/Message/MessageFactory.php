@@ -16,13 +16,9 @@ class MessageFactory implements IMessageFactory
 	/** @var string */
 	private $returnPath;
 
-	public function setFrom($from)
+	public function __construct($from, $returnPath)
 	{
 		$this->from = $from;
-	}
-
-	public function setReturnPath($returnPath)
-	{
 		$this->returnPath = $returnPath;
 	}
 
@@ -32,6 +28,19 @@ class MessageFactory implements IMessageFactory
 	public function create()
 	{
 		$message = new Mail\Message;
+		if ($this->from) {
+			$message->setFrom($this->from);
+		}
+
+		if ($this->returnPath) {
+			$message->setReturnPath($this->returnPath);
+		}
+		return $message;
+	}
+
+	public function createSystemMessage()
+	{
+		$message = new SystemMessage;
 		if ($this->from) {
 			$message->setFrom($this->from);
 		}
