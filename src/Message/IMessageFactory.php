@@ -2,29 +2,26 @@
 
 namespace h4kuna\MailManager\Message;
 
-use Nette\Mail\Message;
+use Nette\Mail;
 
 /**
- *
  * @author Milan Matějček
  */
 interface IMessageFactory
 {
 
 	/**
-	 * @return Message
+	 * @return Mail\Message
 	 */
-	public function create();
+	function create();
 
 	/**
-	 *
 	 * @param string $email
 	 */
-	public function setFrom($email);
+	function setFrom($email);
 
 	/**
-	 *
 	 * @param string $email
 	 */
-	public function setReturnPath($email);
+	function setReturnPath($email);
 }

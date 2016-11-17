@@ -2,14 +2,12 @@
 
 namespace h4kuna\MailManager\Message;
 
-use Nette\Mail\Message;
-use Nette\Object;
+use Nette\Mail;
 
 /**
- *
  * @author Milan Matějček
  */
-class MessageFactory extends Object implements IMessageFactory
+class MessageFactory implements IMessageFactory
 {
 
 	/** @var string */
@@ -29,12 +27,11 @@ class MessageFactory extends Object implements IMessageFactory
 	}
 
 	/**
-	 *
-	 * @return Message
+	 * @return Mail\Message
 	 */
 	public function create()
 	{
-		$message = new Message;
+		$message = new Mail\Message;
 		if ($this->from) {
 			$message->setFrom($this->from);
 		}

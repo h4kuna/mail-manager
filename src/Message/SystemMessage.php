@@ -2,14 +2,14 @@
 
 namespace h4kuna\MailManager\Message;
 
-use Nette\Mail\Message;
+use Nette\Mail;
 
 /**
  * Send system mail
  *
  * @author Milan Matejcek
  */
-class SystemMessage extends Message
+class SystemMessage extends Mail\Message
 {
 
 	public function setBody($body)
