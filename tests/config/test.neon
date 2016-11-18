@@ -1,0 +1,15 @@
+php:
+	date.timezone: Europe/Prague
+
+application:
+	scanDirs: false
+
+extensions:
+	mailManagerExtension: h4kuna\MailManager\DI\MailManagerExtension
+
+mailManagerExtension:
+	development: true
+	from: milan.matejcek@gmail.com
+	templateDir: %appDir%/template # home for mail template
+	globalVars:
+		here: Here

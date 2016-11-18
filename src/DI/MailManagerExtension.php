@@ -13,6 +13,8 @@ class MailManagerExtension extends CompilerExtension
 		// layout
 		'templateDir' => NULL,
 		'plainMacro' => '%file%-plain', // plain/%file% or plain-%file%
+		// template factory
+		'globalVars' => [],
 		// message
 		'from' => NULL,
 		'returnPath' => NULL,
@@ -37,6 +39,7 @@ class MailManagerExtension extends CompilerExtension
 		// template factory
 		$templateFactory = $builder->addDefinition($this->prefix('templateFactory'));
 		$templateFactory->setClass('h4kuna\MailManager\Template\TemplateFactory')
+			->addSetup('setVariables', [$config['globalVars']])
 			->setAutowired(FALSE);
 
 		// mailer

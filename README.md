@@ -26,6 +26,9 @@ mailManagerExtension:
     assetsDir: # path to assets
     returnPath: # where back mail whose send non exists mail
     messageFactory: # prepare for Message instance
+	globalVars: # global variables for all templates
+		foo: bar
+		bar: %variable%
 
     # development
     development: # enable FileMailer whose save email to file

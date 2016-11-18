@@ -18,7 +18,7 @@ Utils\FileSystem::createDir($tmp . '/cache/latte');
 $configurator->enableDebugger($logDir);
 $configurator->setTempDirectory($tmp);
 $configurator->setDebugMode(TRUE);
-$configurator->addConfig(__DIR__ . '/test.neon');
+$configurator->addConfig(__DIR__ . '/config/test.neon');
 $container = $configurator->createContainer();
 
 Tracy\Debugger::enable(FALSE);
