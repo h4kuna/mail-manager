@@ -2,7 +2,7 @@
 
 namespace h4kuna\MailManager\Template;
 
-use Nette\Templating\ITemplate;
+use Nette\Application\UI;
 
 /**
  * @author Milan Matejcek
@@ -10,6 +10,6 @@ use Nette\Templating\ITemplate;
 interface ITemplateFactory
 {
 
-	/** @var ITemplate */
+	/** @var UI\ITemplate */
 	function create();
 }
