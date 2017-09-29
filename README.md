@@ -1,6 +1,10 @@
 MailManager
 -----------
 [![Build Status](https://travis-ci.org/h4kuna/mail-manager.svg?branch=master)](https://travis-ci.org/h4kuna/mail-manager)
+[![Latest stable](https://img.shields.io/packagist/v/h4kuna/mail-manager.svg)](https://packagist.org/packages/h4kuna/mail-manager)
+[![Downloads this Month](https://img.shields.io/packagist/dm/h4kuna/mail-manager.svg)](https://packagist.org/packages/h4kuna/mail-manager)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/h4kuna/mail-manager/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/h4kuna/mail-manager/?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/h4kuna/mail-manager/badge.svg?branch=master)](https://coveralls.io/github/h4kuna/mail-manager?branch=master)
 
 This extension for [Nette framework 2.4+](http://nette.org/). Support testing mails
 
