@@ -2,8 +2,8 @@
 
 namespace h4kuna\MailManager\Mailer;
 
-use Nette\Mail,
-	Nette\Utils;
+use Nette\Mail;
+use Nette\Utils;
 
 /**
  * File Mailer - store mail to server uploads (file)
@@ -23,7 +23,6 @@ class FileMailer implements Mail\IMailer
 	/** @var string */
 	private $lastFile;
 
-
 	/**
 	 * @param $path
 	 */
@@ -33,19 +32,16 @@ class FileMailer implements Mail\IMailer
 		$this->path = realpath($path) . DIRECTORY_SEPARATOR;
 	}
 
-
 	public function setLive($live)
 	{
 		$this->live = $live;
 		return $this;
 	}
 
-
 	public function getLastFile()
 	{
 		return $this->lastFile;
 	}
-
 
 	/**
 	 * @param Mail\Message $mail
@@ -57,7 +53,6 @@ class FileMailer implements Mail\IMailer
 		$this->lastFile = $this->path . date('Y-m-d_H-i-s-') . $sec . '.eml';
 		file_put_contents($this->lastFile, $mail->generateMessage());
 	}
-
 
 	private function autoremove()
 	{

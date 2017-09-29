@@ -2,9 +2,9 @@
 
 namespace h4kuna\MailManager;
 
-use h4kuna\MailManager\Mailer,
-	Nette\Mail,
-	Tester\Assert;
+use h4kuna\MailManager\Mailer;
+use Nette\Mail;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../bootstrap.php';
 
@@ -17,13 +17,11 @@ class MailManagerTest extends \Tester\TestCase
 	/** @var Mailer\FileMailer */
 	private $mailer;
 
-
 	function __construct(MailManager $mailManager, Mailer\FileMailer $mailer)
 	{
 		$this->mailManager = $mailManager;
 		$this->mailer = $mailer;
 	}
-
 
 	/**
 	 * @dataProvider mailManagettest-send.ini
@@ -42,7 +40,6 @@ class MailManagerTest extends \Tester\TestCase
 		Assert::true(filesize($this->mailer->getLastFile()) > 0);
 	}
 
-
 	public function testParseSystemMail()
 	{
 		$message = $this->mailManager->createSystemMail(file_get_contents(__DIR__ . '/../template/system-mail.eml'));
@@ -57,7 +54,7 @@ class MailManagerTest extends \Tester\TestCase
 $mailManager = $container->getByType(\h4kuna\MailManager\MailManager::class);
 
 /* @var $mailer Mailer\FileMailer */
-$mailer = $container->getService('mailManagerExtension.fileMailer');
+$mailer = $container->getService('mailManager.fileMailer');
 
 (new MailManagerTest($mailManager, $mailer))->run();
 

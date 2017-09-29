@@ -16,13 +16,11 @@ class MessageFactory implements IMessageFactory
 	/** @var string */
 	private $returnPath;
 
-
 	public function __construct($from, $returnPath)
 	{
 		$this->from = $from;
 		$this->returnPath = $returnPath;
 	}
-
 
 	/**
 	 * @return Mail\Message
@@ -39,7 +37,6 @@ class MessageFactory implements IMessageFactory
 		}
 		return $message;
 	}
-
 
 	public function createSystemMessage()
 	{

@@ -32,20 +32,17 @@ class SystemMessage extends Mail\Message
 		return parent::setBody($body);
 	}
 
-
 	public function setFrom($email, $name = null)
 	{
 		list($email, $name) = $this->toString($email, $name);
 		return parent::setFrom($email, $name);
 	}
 
-
 	public function setReturnPath($email)
 	{
 		list($email) = $this->toString($email);
 		return parent::setReturnPath($email);
 	}
-
 
 	private function toString($email, $name = null)
 	{

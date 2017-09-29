@@ -20,12 +20,10 @@ class LayoutFactory
 	/** @var Layout[] */
 	private $netteLayouts;
 
-
 	public function __construct(ITemplateFactory $templateFactory)
 	{
 		$this->templateFactory = $templateFactory;
 	}
-
 
 	public function setTemplateDir($path)
 	{
@@ -33,19 +31,16 @@ class LayoutFactory
 		return $this;
 	}
 
-
 	public function setPlainMacro($plainMacro)
 	{
 		$this->plainMacro = $plainMacro;
 	}
-
 
 	/** @return Layout */
 	public function getLastLayout()
 	{
 		return $this->lastLayout;
 	}
-
 
 	/**
 	 * @param string $body
@@ -56,7 +51,6 @@ class LayoutFactory
 		return $this->createBody($body, true);
 	}
 
-
 	/**
 	 * @param string $body
 	 * @return Layout
@@ -65,7 +59,6 @@ class LayoutFactory
 	{
 		return $this->createBody($body, false);
 	}
-
 
 	/**
 	 * @param string $body
@@ -88,7 +81,6 @@ class LayoutFactory
 		return $this->lastLayout = $layout;
 	}
 
-
 	private function createLayout($file, $fileName)
 	{
 		if (isset($this->netteLayouts[$file])) {
@@ -97,7 +89,7 @@ class LayoutFactory
 		$layout = $this->createLayoutClass();
 		$layout->setHtml($this->createNetteTemplate($file));
 
-		$plain = str_replace('=file=', $fileName, $this->plainMacro);
+		$plain = str_replace('{file}', $fileName, $this->plainMacro);
 		$plainFile = $this->checkFile($plain);
 		if ($plainFile) {
 			$layout->setPlain($this->createNetteTemplate($plainFile));
@@ -106,12 +98,10 @@ class LayoutFactory
 		return $layout;
 	}
 
-
 	private function createLayoutClass()
 	{
 		return new Layout;
 	}
-
 
 	private function createNetteTemplate($file)
 	{
@@ -119,7 +109,6 @@ class LayoutFactory
 		$template->setFile($file);
 		return $template;
 	}
-
 
 	/**
 	 * @param string $filePath

@@ -2,10 +2,10 @@
 
 namespace h4kuna\MailManager\DI;
 
-use h4kuna\MailManager,
-	Nette\DI\CompilerExtension;
+use h4kuna\MailManager;
+use Nette\DI as NDI;
 
-class MailManagerExtension extends CompilerExtension
+class MailManagerExtension extends NDI\CompilerExtension
 {
 
 	private $defaults = [
@@ -13,30 +13,22 @@ class MailManagerExtension extends CompilerExtension
 		'assetsDir' => null,
 		// layout
 		'templateDir' => null,
-		'plainMacro' => '%file%-plain', // plain/%file% or plain-%file%
+		'plainMacro' => '{file}-plain', // plain/%file% or plain-%file%
 		// template factory
 		'globalVars' => [],
 		// message
 		'from' => null,
 		'returnPath' => null,
 		// file mailer
-		'development' => null,
-		'tempDir' => null,
+		'debugMode' => '%debugMode%',
+		'tempDir' => '%tempDir%/mails',
 		'live' => '1 minute',
 	];
-
-
-	public function __construct($debugMode = false, $tempDir = null)
-	{
-		$this->defaults['development'] = $debugMode;
-		$this->defaults['tempDir'] = $tempDir . '/mails';
-	}
-
 
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->config + $this->defaults;
+		$config = $this->getConfig($this->defaults);
 
 		// message factory
 		$builder->addDefinition($this->prefix('messageFactory'))
@@ -52,7 +44,7 @@ class MailManagerExtension extends CompilerExtension
 
 		// mailer
 		$mailer = '@nette.mailer';
-		if ($config['development']) {
+		if ($config['debugMode']) {
 			$mailerBuilder = $builder->addDefinition($this->prefix('fileMailer'))
 				->setFactory(MailManager\Mailer\FileMailer::class)
 				->setArguments([$config['tempDir']])

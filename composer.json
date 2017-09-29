@@ -12,8 +12,8 @@
         }
     ],
     "require": {
-        "nette/application": "^2.4",
         "latte/latte": "^2.4",
+        "nette/application": "^2.4",
         "nette/mail": "^2.4",
         "nette/utils": "^2.4"
     },

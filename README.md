@@ -24,7 +24,7 @@ extensions:
 mailManagerExtension:
     from: default@example.com
     templateDir: %appDir%/template # home for mail template
-    development: %debugMode% # enable FileMailer whose save email to file
+    debugMode: %debugMode% # enable FileMailer whose save email to file
     tempDir: %tempDir%/mail # where save email to file
     
     # optional

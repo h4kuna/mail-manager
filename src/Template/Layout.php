@@ -2,8 +2,8 @@
 
 namespace h4kuna\MailManager\Template;
 
-use Nette\Mail,
-	Nette\Application\UI;
+use Nette\Mail;
+use Nette\Application\UI;
 
 class Layout
 {
@@ -14,24 +14,20 @@ class Layout
 	/** @var string|object */
 	private $plain;
 
-
 	public function __construct($plain = null)
 	{
 		$this->setPlain($plain);
 	}
-
 
 	public function setHtml($html)
 	{
 		$this->html = $html;
 	}
 
-
 	public function setPlain($plain)
 	{
 		$this->plain = $plain;
 	}
-
 
 	public function bindMessage(Mail\Message $message, array $data = [], $assetsDir = null)
 	{
@@ -48,7 +44,6 @@ class Layout
 			$message->setHtmlBody($this->html, $assetsDir);
 		}
 	}
-
 
 	/**
 	 * Add variable to template
