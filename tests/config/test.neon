@@ -5,10 +5,9 @@ application:
 	scanDirs: false
 
 extensions:
-	mailManagerExtension: h4kuna\MailManager\DI\MailManagerExtension
+	mailManagerExtension: h4kuna\MailManager\DI\MailManagerExtension(true, %tempDir%)
 
 mailManagerExtension:
-	development: true
 	from: milan.matejcek@gmail.com
 	templateDir: %appDir%/template # home for mail template
 	globalVars:

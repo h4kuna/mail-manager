@@ -17,18 +17,20 @@ class MailManagerTest extends \Tester\TestCase
 	/** @var Mailer\FileMailer */
 	private $mailer;
 
+
 	function __construct(MailManager $mailManager, Mailer\FileMailer $mailer)
 	{
 		$this->mailManager = $mailManager;
 		$this->mailer = $mailer;
 	}
 
+
 	/**
 	 * @dataProvider mailManagettest-send.ini
 	 */
 	public function testSend($email, $body)
 	{
-		$message = $this->mailManager->createMessage($body, array('variable' => 'Hello'))
+		$message = $this->mailManager->createMessage($body, ['variable' => 'Hello'])
 			->addTo($email);
 
 		/* Check returned object */
@@ -39,6 +41,7 @@ class MailManagerTest extends \Tester\TestCase
 		Assert::true(file_exists($this->mailer->getLastFile()));
 		Assert::true(filesize($this->mailer->getLastFile()) > 0);
 	}
+
 
 	public function testParseSystemMail()
 	{
@@ -51,7 +54,7 @@ class MailManagerTest extends \Tester\TestCase
 }
 
 /* @var $mailManager MailManager */
-$mailManager = $container->getByType('h4kuna\MailManager\MailManager');
+$mailManager = $container->getByType(\h4kuna\MailManager\MailManager::class);
 
 /* @var $mailer Mailer\FileMailer */
 $mailer = $container->getService('mailManagerExtension.fileMailer');

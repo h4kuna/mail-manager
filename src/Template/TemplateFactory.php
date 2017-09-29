@@ -19,16 +19,19 @@ class TemplateFactory implements ITemplateFactory
 	/** @var array */
 	private $variables = [];
 
+
 	public function __construct(Application\UI\ITemplateFactory $templateFactory, Application\LinkGenerator $linkGenerator)
 	{
 		$this->templateFactory = $templateFactory;
 		$this->linkGenerator = $linkGenerator;
 	}
 
+
 	public function setVariables(array $variables)
 	{
 		$this->variables = $variables;
 	}
+
 
 	public function create()
 	{

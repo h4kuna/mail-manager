@@ -13,10 +13,12 @@ class LayoutFactoryTest extends \Tester\TestCase
 	/** @var LayoutFactory */
 	private $layoutFactory;
 
+
 	public function __construct(LayoutFactory $layoutFactory)
 	{
 		$this->layoutFactory = $layoutFactory;
 	}
+
 
 	public function testPlainText()
 	{
@@ -24,17 +26,20 @@ class LayoutFactoryTest extends \Tester\TestCase
 		Assert::same('ahoj', $this->getBody($layout));
 	}
 
+
 	public function testPlainTextByStringableObject()
 	{
 		$layout = $this->layoutFactory->createPlainText(new TextObjext('ahoj'));
 		Assert::same('ahoj', $this->getBody($layout));
 	}
 
+
 	public function testPlainTextByFile()
 	{
 		$layout = $this->layoutFactory->createPlainText('test-plain');
 		Assert::same('ahoj', $this->getBody($layout, ['variable' => 'ahoj']));
 	}
+
 
 	public function testHtmlText()
 	{
@@ -45,17 +50,20 @@ class LayoutFactoryTest extends \Tester\TestCase
 		Assert::same('<i>ahoj</i>', $message->getHtmlBody());
 	}
 
+
 	public function testHtmlPlainByFile()
 	{
 		$layout = $this->layoutFactory->createPlainText('test');
 		$message = new \Nette\Mail\Message;
 		$layout->bindMessage($message, ['variable' => 'ahoj']);
 
-		Assert::same('ahoj', trim($message->getBody()));
+		Assert::contains('Here I am.', trim($message->getBody()));
+		Assert::contains('ahoj', trim($message->getBody()));
 
 		// File::save('layout-html-1.html', $message->getHtmlBody());
 		Assert::same(File::load('layout-html-1.html'), $message->getHtmlBody());
 	}
+
 
 	public function testHtmlByFile()
 	{
@@ -69,6 +77,7 @@ class LayoutFactoryTest extends \Tester\TestCase
 		// File::save('layout-html-2.html', $message->getHtmlBody());
 		Assert::same(File::load('layout-html-2.html'), $message->getHtmlBody());
 	}
+
 
 	private function getBody(Layout $layout, array $data = [])
 	{
@@ -84,10 +93,12 @@ class TextObjext
 
 	private $text;
 
+
 	public function __construct($text)
 	{
 		$this->text = $text;
 	}
+
 
 	public function __toString()
 	{

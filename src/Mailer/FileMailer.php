@@ -7,11 +7,9 @@ use Nette\Mail,
 
 /**
  * File Mailer - store mail to server uploads (file)
- *
  * @todo https://github.com/romanmatyus/FileMailer
  * @author David Grudl
  * @author Milan Matejcek
- *
  */
 class FileMailer implements Mail\IMailer
 {
@@ -25,6 +23,7 @@ class FileMailer implements Mail\IMailer
 	/** @var string */
 	private $lastFile;
 
+
 	/**
 	 * @param $path
 	 */
@@ -34,16 +33,19 @@ class FileMailer implements Mail\IMailer
 		$this->path = realpath($path) . DIRECTORY_SEPARATOR;
 	}
 
+
 	public function setLive($live)
 	{
 		$this->live = $live;
 		return $this;
 	}
 
+
 	public function getLastFile()
 	{
 		return $this->lastFile;
 	}
+
 
 	/**
 	 * @param Mail\Message $mail
@@ -55,6 +57,7 @@ class FileMailer implements Mail\IMailer
 		$this->lastFile = $this->path . date('Y-m-d_H-i-s-') . $sec . '.eml';
 		file_put_contents($this->lastFile, $mail->generateMessage());
 	}
+
 
 	private function autoremove()
 	{
@@ -69,7 +72,7 @@ class FileMailer implements Mail\IMailer
 		foreach ($finder->in($this->path) as $file) {
 			@unlink($file->getPathname());
 		}
-		$this->live = NULL; // clear temporary onetime per execution.
+		$this->live = null; // clear temporary onetime per execution.
 	}
 
 }

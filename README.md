@@ -20,9 +20,11 @@ extensions:
 mailManagerExtension:
     from: default@example.com
     templateDir: %appDir%/template # home for mail template
-
+    development: %debugMode% # enable FileMailer whose save email to file
+    tempDir: %tempDir%/mail # where save email to file
+    
     # optional
-	plainMacro: # where will find email like plain text alternative default: %file%-plain
+	plainMacro: # where will find email like plain text alternative default: '=file=-plain'
     assetsDir: # path to assets
     returnPath: # where back mail whose send non exists mail
     messageFactory: # prepare for Message instance
@@ -30,10 +32,8 @@ mailManagerExtension:
 		foo: bar
 		bar: %variable%
 
-    # development
-    development: # enable FileMailer whose save email to file
-    tempDir: # where save email to file
-    live: # how long live email file in temp directory
+    # development    
+    live: FALSE # how long live email file in temp directory
         # - FALSE - forever
         # - '+1 minute' - relative time (default)
 ```

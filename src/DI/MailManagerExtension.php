@@ -2,55 +2,63 @@
 
 namespace h4kuna\MailManager\DI;
 
-use Nette\DI\CompilerExtension;
+use h4kuna\MailManager,
+	Nette\DI\CompilerExtension;
 
 class MailManagerExtension extends CompilerExtension
 {
 
-	public $defaults = [
+	private $defaults = [
 		// mail manager
-		'assetsDir' => NULL,
+		'assetsDir' => null,
 		// layout
-		'templateDir' => NULL,
+		'templateDir' => null,
 		'plainMacro' => '%file%-plain', // plain/%file% or plain-%file%
 		// template factory
 		'globalVars' => [],
 		// message
-		'from' => NULL,
-		'returnPath' => NULL,
+		'from' => null,
+		'returnPath' => null,
 		// file mailer
-		'development' => '%debugMode%',
-		'tempDir' => '%tempDir%/mails',
+		'development' => null,
+		'tempDir' => null,
 		'live' => '1 minute',
 	];
+
+
+	public function __construct($debugMode = false, $tempDir = null)
+	{
+		$this->defaults['development'] = $debugMode;
+		$this->defaults['tempDir'] = $tempDir . '/mails';
+	}
+
 
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$this->defaults['plainMacro'] = str_replace('%', '=', $this->defaults['plainMacro']);
-		$config = $this->getConfig($this->defaults);
+		$config = $this->config + $this->defaults;
 
 		// message factory
 		$builder->addDefinition($this->prefix('messageFactory'))
-			->setClass('h4kuna\MailManager\Message\MessageFactory')
+			->setFactory(MailManager\Message\MessageFactory::class)
 			->setArguments([$config['from'], $config['returnPath']])
-			->setAutowired(FALSE);
+			->setAutowired(false);
 
 		// template factory
 		$templateFactory = $builder->addDefinition($this->prefix('templateFactory'));
-		$templateFactory->setClass('h4kuna\MailManager\Template\TemplateFactory')
+		$templateFactory->setFactory(MailManager\Template\TemplateFactory::class)
 			->addSetup('setVariables', [$config['globalVars']])
-			->setAutowired(FALSE);
+			->setAutowired(false);
 
 		// mailer
 		$mailer = '@nette.mailer';
 		if ($config['development']) {
 			$mailerBuilder = $builder->addDefinition($this->prefix('fileMailer'))
-				->setClass('h4kuna\MailManager\Mailer\FileMailer')
+				->setFactory(MailManager\Mailer\FileMailer::class)
 				->setArguments([$config['tempDir']])
-				->setAutowired(FALSE);
+				->setAutowired(false);
 
-			if ($config['live'] !== NULL) {
+			if ($config['live'] !== null) {
 				$mailerBuilder->addSetup('setLive', [$config['live']]);
 			}
 			$mailer = $this->prefix('@fileMailer');
@@ -58,16 +66,15 @@ class MailManagerExtension extends CompilerExtension
 
 		// layout factory
 		$builder->addDefinition($this->prefix('layoutFactory'))
-			->setClass('h4kuna\MailManager\Template\LayoutFactory')
+			->setFactory(MailManager\Template\LayoutFactory::class)
 			->setArguments([$this->prefix('@templateFactory')])
 			->addSetup('setTemplateDir', [$config['templateDir']])
 			->addSetup('setPlainMacro', [$config['plainMacro']])
-			->setAutowired(FALSE);
+			->setAutowired(false);
 
 		// MailManager
-
 		$builder->addDefinition($this->prefix('mailManager'))
-			->setClass('h4kuna\MailManager\MailManager')
+			->setFactory(MailManager\MailManager::class)
 			->setArguments([$mailer, $this->prefix('@messageFactory'), $this->prefix('@layoutFactory')])
 			->addSetup('setAssetsDir', [$config['assetsDir']]);
 

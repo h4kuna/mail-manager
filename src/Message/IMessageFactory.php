@@ -15,6 +15,7 @@ interface IMessageFactory
 	 */
 	function create();
 
+
 	/**
 	 * @return SystemMessage
 	 */

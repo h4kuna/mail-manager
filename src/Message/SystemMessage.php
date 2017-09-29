@@ -6,7 +6,6 @@ use Nette\Mail;
 
 /**
  * Send system mail
- *
  * @author Milan Matejcek
  */
 class SystemMessage extends Mail\Message
@@ -14,7 +13,7 @@ class SystemMessage extends Mail\Message
 
 	public function setBody($body)
 	{
-		$find = NULL;
+		$find = null;
 		preg_match_all('/^([A-Z].*?): (.*)$/m', $body, $find);
 		if ($find[0]) {
 			foreach ($find[1] as $k => $header) {
@@ -33,11 +32,13 @@ class SystemMessage extends Mail\Message
 		return parent::setBody($body);
 	}
 
-	public function setFrom($email, $name = NULL)
+
+	public function setFrom($email, $name = null)
 	{
 		list($email, $name) = $this->toString($email, $name);
 		return parent::setFrom($email, $name);
 	}
+
 
 	public function setReturnPath($email)
 	{
@@ -45,7 +46,8 @@ class SystemMessage extends Mail\Message
 		return parent::setReturnPath($email);
 	}
 
-	private function toString($email, $name = NULL)
+
+	private function toString($email, $name = null)
 	{
 		if (is_array($email)) {
 			return [key($email), current($email)];

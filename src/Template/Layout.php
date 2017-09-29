@@ -14,22 +14,26 @@ class Layout
 	/** @var string|object */
 	private $plain;
 
-	public function __construct($plain = NULL)
+
+	public function __construct($plain = null)
 	{
 		$this->setPlain($plain);
 	}
+
 
 	public function setHtml($html)
 	{
 		$this->html = $html;
 	}
 
+
 	public function setPlain($plain)
 	{
 		$this->plain = $plain;
 	}
 
-	public function bindMessage(Mail\Message $message, array $data = [], $assetsDir = NULL)
+
+	public function bindMessage(Mail\Message $message, array $data = [], $assetsDir = null)
 	{
 		if ($this->plain) {
 			if ($this->plain instanceof UI\ITemplate) {
@@ -44,6 +48,7 @@ class Layout
 			$message->setHtmlBody($this->html, $assetsDir);
 		}
 	}
+
 
 	/**
 	 * Add variable to template

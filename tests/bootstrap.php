@@ -11,17 +11,16 @@ $configurator = new Nette\Configurator;
 
 Salamium\Testinium\File::setRoot(__DIR__ . '/data');
 
-$tmp = __DIR__ . '/temp';
-$logDir = $tmp . '/log';
-Utils\FileSystem::createDir($logDir);
-Utils\FileSystem::createDir($tmp . '/cache/latte');
-$configurator->enableDebugger($logDir);
-$configurator->setTempDirectory($tmp);
-$configurator->setDebugMode(TRUE);
+define('TEMP_DIR', __DIR__ . '/temp/' . getmypid());
+
+Utils\FileSystem::createDir(TEMP_DIR . '/cache/latte');
+$configurator->enableDebugger(TEMP_DIR . '/..');
+$configurator->setTempDirectory(TEMP_DIR);
+$configurator->setDebugMode(true);
 $configurator->addConfig(__DIR__ . '/config/test.neon');
 $container = $configurator->createContainer();
 
-Tracy\Debugger::enable(FALSE);
+Tracy\Debugger::enable(false);
 
 return $container;
 

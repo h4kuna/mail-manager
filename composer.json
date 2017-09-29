@@ -19,7 +19,7 @@
     },
     "require-dev": {
 		"nette/bootstrap": "^2.4",
-        "salamium/testinium": "dev-master"
+        "salamium/testinium": "^0.1"
     },
     "autoload": {
         "psr-4": {
