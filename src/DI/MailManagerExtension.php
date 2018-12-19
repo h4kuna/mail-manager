@@ -65,10 +65,13 @@ class MailManagerExtension extends NDI\CompilerExtension
 			->setAutowired(false);
 
 		// MailManager
-		$builder->addDefinition($this->prefix('mailManager'))
+		$mailManager = $builder->addDefinition($this->prefix('mailManager'))
 			->setFactory(MailManager\MailManager::class)
-			->setArguments([$mailer, $this->prefix('@messageFactory'), $this->prefix('@layoutFactory')])
-			->addSetup('setAssetsDir', [$config['assetsDir']]);
+			->setArguments([$mailer, $this->prefix('@messageFactory'), $this->prefix('@layoutFactory')]);
+
+		if ($config['assetsDir'] !== NULL) {
+			$mailManager->addSetup('setAssetsDir', [$config['assetsDir']]);
+		}
 
 		return $builder;
 	}
