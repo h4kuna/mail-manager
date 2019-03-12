@@ -1,12 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace h4kuna\MailManager\Template;
 
-use Tester\Assert;
+use Nette\Application\UI\ITemplate;
 use Salamium\Testinium\File;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootstrap.php';
 
+/**
+ * @testCase
+ */
 class LayoutFactoryTest extends \Tester\TestCase
 {
 
@@ -26,7 +30,7 @@ class LayoutFactoryTest extends \Tester\TestCase
 
 	public function testPlainTextByStringableObject()
 	{
-		$layout = $this->layoutFactory->createPlainText(new TextObjext('ahoj'));
+		$layout = $this->layoutFactory->createPlainText(new TextObject('ahoj'));
 		Assert::same('ahoj', $this->getBody($layout));
 	}
 
@@ -80,7 +84,7 @@ class LayoutFactoryTest extends \Tester\TestCase
 
 }
 
-class TextObjext
+class TextObject implements ITemplate
 {
 
 	private $text;
@@ -93,6 +97,22 @@ class TextObjext
 	public function __toString()
 	{
 		return (string) $this->text;
+	}
+
+
+	public function render()
+	{
+	}
+
+
+	public function setFile($file)
+	{
+		return $this;
+	}
+
+
+	public function getFile()
+	{
 	}
 
 }

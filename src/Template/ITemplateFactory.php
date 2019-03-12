@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace h4kuna\MailManager\Template;
 
@@ -7,6 +7,6 @@ use Nette\Application\UI;
 interface ITemplateFactory
 {
 
-	/** @return UI\ITemplate */
-	function create();
+	function create(): UI\ITemplate;
+
 }

@@ -10,5 +10,7 @@ extensions:
 mailManager:
 	from: milan.matejcek@gmail.com
 	templateDir: %appDir%/template # home for mail template
+	tempDir: %tempDir%/mail
+	debugMode: true
 	globalVars:
 		here: Here

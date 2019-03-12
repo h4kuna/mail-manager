@@ -1,12 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace h4kuna\MailManager\Message;
 
 use Nette\Mail;
 
-/**
- * @author Milan Matějček
- */
 class MessageFactory implements IMessageFactory
 {
 
@@ -16,39 +13,45 @@ class MessageFactory implements IMessageFactory
 	/** @var string */
 	private $returnPath;
 
-	public function __construct($from, $returnPath)
+
+	public function __construct(string $from, string $returnPath)
 	{
 		$this->from = $from;
 		$this->returnPath = $returnPath;
 	}
 
-	/**
-	 * @return Mail\Message
-	 */
-	public function create()
+
+	public function create(): Mail\Message
 	{
 		$message = new Mail\Message;
-		if ($this->from) {
-			$message->setFrom($this->from);
-		}
-
-		if ($this->returnPath) {
-			$message->setReturnPath($this->returnPath);
-		}
+		$this->bindFrom($message);
+		$this->bindReturnPath($message);
 		return $message;
 	}
 
-	public function createSystemMessage()
+
+	public function createSystemMessage(): SystemMessage
 	{
 		$message = new SystemMessage;
-		if ($this->from) {
+		$this->bindFrom($message);
+		$this->bindReturnPath($message);
+		return $message;
+	}
+
+
+	private function bindFrom(Mail\Message $message): void
+	{
+		if ($this->from !== '') {
 			$message->setFrom($this->from);
 		}
+	}
 
-		if ($this->returnPath) {
+
+	private function bindReturnPath(Mail\Message $message): void
+	{
+		if ($this->returnPath !== '') {
 			$message->setReturnPath($this->returnPath);
 		}
-		return $message;
 	}
 
 }

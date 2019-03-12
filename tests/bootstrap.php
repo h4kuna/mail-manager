@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Nette\Utils;
 
@@ -6,12 +6,11 @@ include __DIR__ . "/../vendor/autoload.php";
 
 Tester\Environment::setup();
 
-// 2# Create Nette Configurator
 $configurator = new Nette\Configurator;
 
 Salamium\Testinium\File::setRoot(__DIR__ . '/data');
 
-define('TEMP_DIR', __DIR__ . '/temp/' . getmypid());
+define('TEMP_DIR', __DIR__ . '/temp');
 
 Utils\FileSystem::createDir(TEMP_DIR . '/cache/latte');
 $configurator->enableDebugger(TEMP_DIR . '/..');

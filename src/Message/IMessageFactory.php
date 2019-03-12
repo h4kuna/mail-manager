@@ -1,22 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace h4kuna\MailManager\Message;
 
 use Nette\Mail;
 
-/**
- * @author Milan Matějček
- */
 interface IMessageFactory
 {
 
-	/**
-	 * @return Mail\Message
-	 */
-	function create();
+	function create(): Mail\Message;
 
-	/**
-	 * @return SystemMessage
-	 */
-	function createSystemMessage();
+
+	function createSystemMessage(): SystemMessage;
+
 }

@@ -1,6 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace h4kuna\MailManager\Template;
+
+use Nette\Application\UI\ITemplate;
 
 class LayoutFactory
 {
@@ -20,68 +22,62 @@ class LayoutFactory
 	/** @var Layout[] */
 	private $netteLayouts;
 
+
 	public function __construct(ITemplateFactory $templateFactory)
 	{
 		$this->templateFactory = $templateFactory;
 	}
 
-	public function setTemplateDir($path)
+
+	public function setTemplateDir(string $path): void
 	{
 		$this->mailDir = $path;
-		return $this;
 	}
 
-	public function setPlainMacro($plainMacro)
+
+	public function setPlainMacro(string $plainMacro): void
 	{
 		$this->plainMacro = $plainMacro;
 	}
 
-	/** @return Layout */
-	public function getLastLayout()
+
+	public function getLastLayout(): Layout
 	{
 		return $this->lastLayout;
 	}
 
-	/**
-	 * @param string $body
-	 * @return Layout
-	 */
-	public function createHtml($body)
+
+	public function createHtml($body): Layout
 	{
 		return $this->createBody($body, true);
 	}
 
-	/**
-	 * @param string $body
-	 * @return Layout
-	 */
-	public function createPlainText($body)
+
+	public function createPlainText($body): Layout
 	{
 		return $this->createBody($body, false);
 	}
 
-	/**
-	 * @param string $body
-	 * @param bool $html
-	 * @return Layout
-	 */
-	private function createBody($body, $html)
+
+	private function createBody($body, bool $html): Layout
 	{
-		$file = $this->checkFile($body);
-		if ($file) {
-			$layout = $this->createLayout($file, $body);
-		} else {
+		$file = is_string($body) ? $this->checkFile($body) : null;
+
+		if ($file === null) {
 			$layout = $this->createLayoutClass();
 			if ($html) {
 				$layout->setHtml($body);
 			} else {
 				$layout->setPlain($body);
 			}
+		} else {
+			$layout = $this->createLayout($file, $body);
 		}
 		return $this->lastLayout = $layout;
 	}
 
-	private function createLayout($file, $fileName)
+
+	private function createLayout(string $file, string $fileName): Layout
 	{
 		if (isset($this->netteLayouts[$file])) {
 			return $this->netteLayouts[$file];
@@ -98,23 +94,22 @@ class LayoutFactory
 		return $layout;
 	}
 
-	private function createLayoutClass()
+
+	private function createLayoutClass(): Layout
 	{
 		return new Layout;
 	}
 
-	private function createNetteTemplate($file)
+
+	private function createNetteTemplate(string $file): ITemplate
 	{
 		$template = $this->templateFactory->create();
 		$template->setFile($file);
 		return $template;
 	}
 
-	/**
-	 * @param string $filePath
-	 * @return string|boolean
-	 */
-	private function checkFile($filePath)
+
+	private function checkFile(string $filePath): ?string
 	{
 		$file = $this->mailDir . DIRECTORY_SEPARATOR . $filePath . '.latte';
 		if ($this->mailDir && is_file($file)) {
@@ -122,7 +117,7 @@ class LayoutFactory
 		} elseif (is_file($filePath)) {
 			return $filePath;
 		}
-		return false;
+		return null;
 	}
 
 }

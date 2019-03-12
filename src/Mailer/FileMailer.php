@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace h4kuna\MailManager\Mailer;
 
@@ -9,7 +9,6 @@ use Nette\Utils;
  * File Mailer - store mail to server uploads (file)
  * @todo https://github.com/romanmatyus/FileMailer
  * @author David Grudl
- * @author Milan Matejcek
  */
 class FileMailer implements Mail\IMailer
 {
@@ -17,36 +16,33 @@ class FileMailer implements Mail\IMailer
 	/** @var string */
 	private $path;
 
-	/** @var string */
+	/** @var string|null */
 	private $live;
 
 	/** @var string */
 	private $lastFile;
 
-	/**
-	 * @param $path
-	 */
-	public function __construct($path)
+
+	public function __construct(string $path)
 	{
 		Utils\FileSystem::createDir($path);
 		$this->path = realpath($path) . DIRECTORY_SEPARATOR;
 	}
 
-	public function setLive($live)
+
+	public function setLive(string $live): void
 	{
 		$this->live = $live;
-		return $this;
 	}
 
-	public function getLastFile()
+
+	public function getLastFile(): string
 	{
 		return $this->lastFile;
 	}
 
-	/**
-	 * @param Mail\Message $mail
-	 */
-	public function send(Mail\Message $mail)
+
+	public function send(Mail\Message $mail): void
 	{
 		$this->autoremove();
 		list($sec) = explode(' ', substr(microtime(), 2));
@@ -54,7 +50,8 @@ class FileMailer implements Mail\IMailer
 		file_put_contents($this->lastFile, $mail->generateMessage());
 	}
 
-	private function autoremove()
+
+	private function autoremove(): void
 	{
 		if (!$this->live) {
 			return;

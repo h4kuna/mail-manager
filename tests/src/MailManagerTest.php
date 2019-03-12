@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace h4kuna\MailManager;
 
@@ -8,6 +8,9 @@ use Tester\Assert;
 
 $container = require __DIR__ . '/../bootstrap.php';
 
+/**
+ * @testCase
+ */
 class MailManagerTest extends \Tester\TestCase
 {
 
