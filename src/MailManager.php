@@ -38,7 +38,7 @@ class MailManager
 	{
 		$dir = realpath($path);
 		if (!$dir) {
-			throw new DirectoryNotFoundException($path);
+			throw new DirectoryNotFound($path);
 		}
 		$this->assetsDir = $dir;
 	}

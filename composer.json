@@ -24,7 +24,6 @@
     "autoload": {
         "psr-4": {
             "h4kuna\\MailManager\\": "src\\"
-        },
-		"files": ["src/exceptions.php"]
+        }
     }
 }
