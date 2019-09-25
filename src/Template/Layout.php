@@ -43,13 +43,13 @@ class Layout
 	{
 		if (self::isNotEmpty($this->plain)) {
 			if ($this->plain instanceof UI\ITemplate) {
-				$this->bindNetteTemplate($this->plain, $data);
+				self::bindNetteTemplate($this->plain, $data);
 			}
 			$message->setBody((string) $this->plain);
 		}
 		if (self::isNotEmpty($this->html)) {
 			if ($this->html instanceof UI\ITemplate) {
-				$this->bindNetteTemplate($this->html, $data);
+				self::bindNetteTemplate($this->html, $data);
 			}
 			$message->setHtmlBody((string) $this->html, $assetsDir);
 		}
@@ -59,7 +59,7 @@ class Layout
 	/**
 	 * Add variable to template
 	 */
-	private function bindNetteTemplate(UI\ITemplate $template, array $data): void
+	private static function bindNetteTemplate(UI\ITemplate $template, array $data): void
 	{
 		foreach ($data as $key => $value) {
 			$template->{$key} = $value;

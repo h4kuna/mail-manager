@@ -20,11 +20,13 @@ class MailManagerTest extends \Tester\TestCase
 	/** @var Mailer\FileMailer */
 	private $mailer;
 
-	function __construct(MailManager $mailManager, Mailer\FileMailer $mailer)
+
+	public function __construct(MailManager $mailManager, Mailer\FileMailer $mailer)
 	{
 		$this->mailManager = $mailManager;
 		$this->mailer = $mailer;
 	}
+
 
 	/**
 	 * @dataProvider mailManagettest-send.ini
@@ -42,6 +44,7 @@ class MailManagerTest extends \Tester\TestCase
 		Assert::true(file_exists($this->mailer->getLastFile()));
 		Assert::true(filesize($this->mailer->getLastFile()) > 0);
 	}
+
 
 	public function testParseSystemMail()
 	{

@@ -4,65 +4,85 @@ namespace h4kuna\MailManager\DI;
 
 use h4kuna\MailManager;
 use Nette\DI as NDI;
+use Nette\Mail;
+use Nette\Schema;
 
 class MailManagerExtension extends NDI\CompilerExtension
 {
 
-	private $defaults = [
-		// mail manager
-		'assetsDir' => '',
-		// layout
-		'templateDir' => '',
-		'plainMacro' => '{file}-plain', // plain/%file% or plain-%file%
-		// template factory
-		'globalVars' => [],
-		// message
-		'from' => '',
-		'returnPath' => '',
-		// file mailer
-		'debugMode' => false,
-		'tempDir' => '/tmp',
-		'live' => '1 minute',
-	];
+	/** @var bool */
+	private $debugMode;
 
-	public function loadConfiguration()
+
+	public function __construct(bool $debugMode = false)
 	{
-		$builder = $this->getContainerBuilder();
-		$config = $this->validateConfig($this->defaults);
-
-		$this->buildMessageFactory($builder, (string) $config['from'], (string) $config['returnPath']);
-
-		$this->buildTemplateFactory($builder, $config['globalVars']);
-
-		$mailer = $this->buildMailer($builder, $config['debugMode'], $config['tempDir'], $config['live']);
-
-		$this->buildLayoutFactory($builder, (string) $config['templateDir'], $config['plainMacro']);
-
-		$this->buildMailManager($builder, $mailer, (string) $config['assetsDir']);
+		$this->debugMode = $debugMode;
 	}
 
 
-	private function buildMessageFactory(NDI\ContainerBuilder $builder, string $from, string $returnPath): void
+	public function loadConfiguration()
 	{
-		$builder->addDefinition($this->prefix('messageFactory'))
+		$this->buildMessageFactory((string) $this->config->from, (string) $this->config->returnPath);
+
+		$this->buildTemplateFactory($this->config->globalVars);
+
+		$mailer = $this->buildMailer($this->config->debugMode, $this->config->tempDir, $this->config->live);
+
+		$this->buildLayoutFactory((string) $this->config->templateDir, $this->config->plainMacro);
+
+		$this->buildMailManager($mailer, (string) $this->config->assetsDir);
+	}
+
+
+	public function getConfigSchema(): Schema\Schema
+	{
+		return Schema\Expect::structure([
+			// mail manager
+			'assetsDir' => Schema\Expect::string(''),
+
+			// layout
+			'templateDir' => Schema\Expect::string(''),
+			'plainMacro' => Schema\Expect::string('{file}-plain'), // plain/%file% or plain-%file%
+
+			// template factory
+			'globalVars' => Schema\Expect::array([]),
+
+			// message
+			'from' => Schema\Expect::string(''),
+			'returnPath' => Schema\Expect::string(''),
+
+			// file mailer
+			'debugMode' => Schema\Expect::bool($this->debugMode),
+			'tempDir' => Schema\Expect::string('/tmp'),
+			'live' => Schema\Expect::string('1 minute')->nullable(),
+		]);
+	}
+
+
+	private function buildMessageFactory(string $from, string $returnPath): void
+	{
+		$this->getContainerBuilder()
+			->addDefinition($this->prefix('messageFactory'))
 			->setFactory(MailManager\Message\MessageFactory::class)
 			->setArguments([$from, $returnPath])
 			->setAutowired(false);
 	}
 
 
-	private function buildTemplateFactory(NDI\ContainerBuilder $builder, array $globalVars): void
+	private function buildTemplateFactory(array $globalVars): void
 	{
-		$builder->addDefinition($this->prefix('templateFactory'))
+		$this->getContainerBuilder()
+			->addDefinition($this->prefix('templateFactory'))
 			->setFactory(MailManager\Template\TemplateFactory::class)
 			->addSetup('setVariables', [$globalVars])
 			->setAutowired(false);
 	}
 
 
-	private function buildLayoutFactory(NDI\ContainerBuilder $builder, $templateDir, $plainMacro): void
+	private function buildLayoutFactory(string $templateDir, string $plainMacro): void
 	{
-		$builder->addDefinition($this->prefix('layoutFactory'))
+		$this->getContainerBuilder()
+			->addDefinition($this->prefix('layoutFactory'))
 			->setFactory(MailManager\Template\LayoutFactory::class)
 			->setArguments([$this->prefix('@templateFactory')])
 			->addSetup('setTemplateDir', [$templateDir])
@@ -71,19 +91,18 @@ class MailManagerExtension extends NDI\CompilerExtension
 	}
 
 
-	/**
-	 * @param NDI\ContainerBuilder $builder
-	 * @param bool $debugMode
-	 * @param string $tempDir
-	 * @param string|null $live
-	 * @return string
-	 */
-	private function buildMailer(NDI\ContainerBuilder $builder, bool $debugMode, string $tempDir, ?string $live): string
+	private function buildMailer(bool $debugMode, string $tempDir, ?string $live): string
 	{
 		if (!$debugMode) {
-			return '@nette.mailer';
+			try {
+				$definition = $this->getContainerBuilder()->getDefinitionByType(Mail\IMailer::class);
+			} catch (NDI\MissingServiceException $e) {
+				return '';
+			}
+			return '@' . $definition->getName();
 		}
-		$mailerBuilder = $builder->addDefinition($this->prefix('fileMailer'))
+		$mailerBuilder = $this->getContainerBuilder()
+			->addDefinition($this->prefix('fileMailer'))
 			->setFactory(MailManager\Mailer\FileMailer::class)
 			->setArguments([$tempDir])
 			->setAutowired(false);
@@ -95,9 +114,10 @@ class MailManagerExtension extends NDI\CompilerExtension
 	}
 
 
-	private function buildMailManager(NDI\ContainerBuilder $builder, string $mailer, string $assetsDir): void
+	private function buildMailManager(string $mailer, string $assetsDir): void
 	{
-		$mailManager = $builder->addDefinition($this->prefix('mailManager'))
+		$mailManager = $this->getContainerBuilder()
+			->addDefinition($this->prefix('mailManager'))
 			->setFactory(MailManager\MailManager::class)
 			->setArguments([$mailer, $this->prefix('@messageFactory'), $this->prefix('@layoutFactory')]);
 

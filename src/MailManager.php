@@ -23,7 +23,11 @@ class MailManager
 	private $assetsDir = '';
 
 
-	public function __construct(Mail\IMailer $mailer, Message\IMessageFactory $messageFactory, Template\LayoutFactory $layoutFactory)
+	public function __construct(
+		Mail\IMailer $mailer,
+		Message\IMessageFactory $messageFactory,
+		Template\LayoutFactory $layoutFactory
+	)
 	{
 		$this->mailer = $mailer;
 		$this->messageFactory = $messageFactory;
@@ -65,9 +69,9 @@ class MailManager
 	}
 
 
-	public function getLayoutFactory(): Template\LayoutFactory
+	public function getLastLayout(): Template\Layout
 	{
-		return $this->layoutFactory;
+		return $this->layoutFactory->getLastLayout();
 	}
 
 

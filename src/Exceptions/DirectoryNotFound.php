@@ -2,7 +2,9 @@
 
 namespace h4kuna\MailManager\Exceptions;
 
-class DirectoryNotFound extends \RuntimeException
+use RuntimeException;
+
+class DirectoryNotFound extends RuntimeException
 {
 
 }

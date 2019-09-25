@@ -100,18 +100,18 @@ class TextObject implements ITemplate
 	}
 
 
-	public function render()
+	public function render(): void
 	{
 	}
 
 
-	public function setFile($file)
+	public function setFile(string $file)
 	{
 		return $this;
 	}
 
 
-	public function getFile()
+	public function getFile(): ?string
 	{
 	}
 

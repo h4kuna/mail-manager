@@ -17,7 +17,11 @@ class TemplateFactory implements ITemplateFactory
 	/** @var mixed[] */
 	private $variables = [];
 
-	public function __construct(Application\UI\ITemplateFactory $templateFactory, Application\LinkGenerator $linkGenerator)
+
+	public function __construct(
+		Application\UI\ITemplateFactory $templateFactory,
+		Application\LinkGenerator $linkGenerator
+	)
 	{
 		$this->templateFactory = $templateFactory;
 		$this->linkGenerator = $linkGenerator;

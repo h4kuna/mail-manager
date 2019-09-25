@@ -13,7 +13,7 @@ Salamium\Testinium\File::setRoot(__DIR__ . '/data');
 define('TEMP_DIR', __DIR__ . '/temp');
 
 Utils\FileSystem::createDir(TEMP_DIR . '/cache/latte');
-$configurator->enableDebugger(TEMP_DIR . '/..');
+$configurator->enableDebugger(TEMP_DIR);
 $configurator->setTempDirectory(TEMP_DIR);
 $configurator->setDebugMode(true);
 $configurator->addConfig(__DIR__ . '/config/test.neon');

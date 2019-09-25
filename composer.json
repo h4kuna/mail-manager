@@ -13,15 +13,16 @@
     ],
     "require": {
         "php": ">=7.1",
-        "latte/latte": "^2.4 || ^3.0",
-        "nette/application": "^2.4 || ^3.0",
-        "nette/mail": "^2.4 || ^3.0",
-        "nette/utils": "^2.4 || ^3.0"
+        "latte/latte": "~2.4",
+        "nette/application": "~3.0",
+        "nette/mail": "~3.0",
+        "nette/schema": "~1.0",
+        "nette/utils": "~3.0"
     },
     "require-dev": {
-		"nette/bootstrap": "^2.4 || ^3.0",
-        "salamium/testinium": "^0.1",
-        "phpstan/phpstan": "^0.11.3"
+        "nette/bootstrap": "~3.0",
+        "phpstan/phpstan": "~0.11",
+        "salamium/testinium": "^0.1"
     },
     "autoload": {
         "psr-4": {
