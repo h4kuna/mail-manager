@@ -1,3 +1,5 @@
+# [Abandoned]
+
 MailManager
 -----------
 [![Build Status](https://travis-ci.org/h4kuna/mail-manager.svg?branch=master)](https://travis-ci.org/h4kuna/mail-manager)
